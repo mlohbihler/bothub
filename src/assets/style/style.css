@@ -234,16 +234,13 @@ button:focus-visible {
   background-color: #eee;
   border-radius: 10px;
   height: 100%;
-  /* left: 20px; */
-  /* bottom: 30px; */
-  /* padding: 10px; */
-  /* border: 1px solid red; */
-  /* border-radius: 5px; */
-  /* min-width: 300px; */
-  /* color: #333d; */
-  /* opacity: 0; */
-  /* transition: 1s; */
 }
 #infoModalContent {
   color: #333;
+}
+#infoLogo {
+  display: inline;
+  position: absolute;
+  right: 20px;
+  top: 10px;
 }

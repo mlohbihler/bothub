@@ -11,6 +11,7 @@ import {
   AABB,
   Transform,
   RevoluteJoint,
+  Style,
 } from 'planck'
 import { getContext, isNil } from '../util'
 import { forEachNextable } from './boxUtil'
@@ -30,11 +31,6 @@ interface WorldStageOptions {
   fill?: string
 }
 
-interface Style {
-  stroke?: string
-  fill?: string
-}
-
 interface Rendered {
   offscreenCanvas: OffscreenCanvas
   offset: Vec2
@@ -46,7 +42,6 @@ type Renderable = Body | Fixture | Joint
 
 interface RenderOptions extends WorldStageOptions {
   viewPortBounds: AABB
-  padding: number
 }
 
 export default class Renderer {
@@ -140,7 +135,6 @@ export default class Renderer {
         lineWidth: this.lineWidth,
         scaleFactor,
         viewPortBounds: AABB(Vec2(-offset.x, offset.y - cx.canvas.height), Vec2(cx.canvas.width - offset.x, offset.y)),
-        padding: this.lineWidth,
       }
       forEachNextable(world.getBodyList(), body => this.renderBody(body, options))
 
@@ -159,12 +153,12 @@ export default class Renderer {
     let rendered = this.rendereds.get(body)
     if (rendered === undefined) {
       if (body.getFixtureList()) {
-        const aabb = this.getBodyAABB(body)
-        // Add padding to the AABB to allow for high line widths in strokes.
-        aabb.lowerBound.x -= options.padding
-        aabb.lowerBound.y -= options.padding
-        aabb.upperBound.x += options.padding
-        aabb.upperBound.y += options.padding
+        const [aabb, maxLineWidth] = this.getBodyAABB(body, options.lineWidth)
+        // Add maxLineWidth to the AABB to allow for high line widths in strokes.
+        aabb.lowerBound.x -= maxLineWidth
+        aabb.lowerBound.y -= maxLineWidth
+        aabb.upperBound.x += maxLineWidth
+        aabb.upperBound.y += maxLineWidth
 
         const width = (aabb.upperBound.x - aabb.lowerBound.x) * scaleFactor
         const height = (aabb.upperBound.y - aabb.lowerBound.y) * scaleFactor
@@ -211,10 +205,12 @@ export default class Renderer {
     }
   }
 
-  getBodyAABB(body: Body): AABB {
+  getBodyAABB(body: Body, defaultLineWidth: number): [AABB, number] {
     const xf = new Transform()
 
     let union: AABB | null = null
+    const bodyLineWidth = this.getStyle(body).lineWidth
+    let maxLineWidth = 0
     forEachNextable(body.getFixtureList(), fixture => {
       const aabb = new AABB()
 
@@ -242,8 +238,10 @@ export default class Renderer {
       } else {
         union = aabb
       }
+
+      maxLineWidth = Math.max(maxLineWidth, this.getStyle(fixture).lineWidth ?? bodyLineWidth ?? defaultLineWidth ?? 0)
     })
-    return union ?? new AABB()
+    return [union ?? new AABB(), maxLineWidth]
   }
 
   calculateMaximumOffsetDistance(aabb: AABB) {
@@ -263,37 +261,41 @@ export default class Renderer {
 
   renderFixtures(body: Body, cx: OffscreenCanvasRenderingContext2D, options: WorldStageOptions) {
     forEachNextable(body.getFixtureList(), fixture => {
+      const fixtureOptions: Style = {}
       const fstyle = this.getStyle(fixture)
       const bstyle = this.getStyle(body)
-      options.stroke = fstyle?.stroke ?? bstyle?.stroke
-      if (isNil(options.stroke)) {
+      fixtureOptions.stroke = fstyle?.stroke ?? bstyle?.stroke ?? options.stroke
+      if (isNil(fixtureOptions.stroke)) {
         if (body.isDynamic()) {
-          options.stroke = 'rgba(255,255,255,0.9)'
+          fixtureOptions.stroke = 'rgba(255,255,255,0.9)'
         } else if (body.isKinematic()) {
-          options.stroke = 'rgba(255,255,255,0.7)'
+          fixtureOptions.stroke = 'rgba(255,255,255,0.7)'
         } else if (body.isStatic()) {
-          options.stroke = 'rgba(255,255,255,0.5)'
+          fixtureOptions.stroke = 'rgba(255,255,255,0.5)'
         }
       }
-      options.fill = fstyle?.fill ?? bstyle?.fill ?? ''
+
+      fixtureOptions.fill = fstyle?.fill ?? bstyle?.fill ?? options.fill ?? ''
+      fixtureOptions.lineWidth = fstyle?.lineWidth ?? bstyle?.lineWidth ?? options.lineWidth
+      fixtureOptions.drawOrientation = fstyle?.drawOrientation ?? bstyle?.drawOrientation ?? this.drawOrientations
       const type = fixture.getType()
       const shape = fixture.getShape()
 
       if (type == 'circle') {
-        this.drawCircle(shape as CircleShape, cx, options)
+        this.drawCircle(shape as CircleShape, cx, fixtureOptions)
       } else if (type == 'edge') {
-        this.drawEdge(shape as EdgeShape, cx, options)
+        this.drawEdge(shape as EdgeShape, cx, fixtureOptions)
       } else if (type == 'polygon') {
-        this.drawPolygon(shape as PolygonShape, cx, options)
+        this.drawPolygon(shape as PolygonShape, cx, fixtureOptions)
       } else if (type == 'chain') {
-        this.drawChain(shape as ChainShape, cx, options)
+        this.drawChain(shape as ChainShape, cx, fixtureOptions)
       } else {
         console.warn(`unknown type: ${type}`)
       }
     })
   }
 
-  drawCircle(shape: CircleShape, cx: OffscreenCanvasRenderingContext2D, options: WorldStageOptions) {
+  drawCircle(shape: CircleShape, cx: OffscreenCanvasRenderingContext2D, options: Style) {
     const r = shape.m_radius
     cx.beginPath()
     cx.arc(0, 0, r, 0, 2 * Math.PI)
@@ -302,14 +304,14 @@ export default class Renderer {
       cx.fill()
     }
     if (options.stroke) {
-      if (this.drawOrientations) cx.lineTo(0, 0)
-      cx.lineWidth = options.lineWidth
+      if (options.drawOrientation) cx.lineTo(0, 0)
+      cx.lineWidth = options.lineWidth ?? 1
       cx.strokeStyle = options.stroke ?? ''
       cx.stroke()
     }
   }
 
-  drawEdge(edge: EdgeShape, cx: OffscreenCanvasRenderingContext2D, options: WorldStageOptions) {
+  drawEdge(edge: EdgeShape, cx: OffscreenCanvasRenderingContext2D, options: Style) {
     const v1 = edge.m_vertex1
     const v2 = edge.m_vertex2
 
@@ -318,12 +320,12 @@ export default class Renderer {
     cx.lineTo(v2.x, v2.y)
 
     cx.lineCap = 'round'
-    cx.lineWidth = options.lineWidth
+    cx.lineWidth = options.lineWidth ?? 1
     cx.strokeStyle = options.stroke ?? ''
     cx.stroke()
   }
 
-  drawPolygon(shape: PolygonShape, cx: OffscreenCanvasRenderingContext2D, options: WorldStageOptions) {
+  drawPolygon(shape: PolygonShape, cx: OffscreenCanvasRenderingContext2D, options: Style) {
     const vertices = shape.m_vertices
     if (!vertices.length) {
       return
@@ -349,13 +351,13 @@ export default class Renderer {
 
     if (options.stroke) {
       cx.lineCap = 'round'
-      cx.lineWidth = options.lineWidth
+      cx.lineWidth = options.lineWidth ?? 1
       cx.strokeStyle = options.stroke ?? ''
       cx.stroke()
     }
   }
 
-  drawChain(shape: ChainShape, cx: OffscreenCanvasRenderingContext2D, options: WorldStageOptions) {
+  drawChain(shape: ChainShape, cx: OffscreenCanvasRenderingContext2D, options: Style) {
     const vertices = shape.m_vertices
     if (!vertices.length) {
       return
@@ -379,7 +381,7 @@ export default class Renderer {
     }
 
     cx.lineCap = 'round'
-    cx.lineWidth = options.lineWidth
+    cx.lineWidth = options.lineWidth ?? 1
     cx.strokeStyle = options.stroke ?? ''
     cx.stroke()
   }
