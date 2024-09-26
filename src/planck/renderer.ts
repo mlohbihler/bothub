@@ -47,6 +47,9 @@ interface RenderOptions extends WorldStageOptions {
 export default class Renderer {
   zoonIncrement = 1.3
 
+  centerScaleFactor
+  centerOffset
+
   cx
   scaleFactor
   lineWidth
@@ -57,12 +60,20 @@ export default class Renderer {
   rendereds = new Map<Renderable, Rendered | null>()
 
   constructor(cx: CanvasRenderingContext2D, options: Partial<RendererOptions>) {
+    this.centerScaleFactor = options.scaleFactor ?? 1
+    this.centerOffset = options.offset ?? Vec2(0, 0)
+
     this.cx = cx
-    this.scaleFactor = options.scaleFactor ?? 1
-    this.offset = options.offset ?? Vec2(0, 0)
+    this.scaleFactor = this.centerScaleFactor
+    this.offset = this.centerOffset.clone()
     this.lineWidth = options.lineWidth ?? 0.2
     this.drawJoints = options.drawJoints ?? false
     this.drawOrientations = options.drawOrientations ?? false
+  }
+
+  recenter() {
+    this.scaleFactor = this.centerScaleFactor
+    this.offset = this.centerOffset.clone()
   }
 
   zoom(zoomIn: boolean, x: number, y: number) {

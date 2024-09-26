@@ -107,7 +107,7 @@ body {
   min-width: 300px;
   color: #333d;
   opacity: 0;
-  transition: 1s;
+  transition: 0.7s;
 }
 
 #codeError:hover {
@@ -256,6 +256,12 @@ body {
   border: 1px solid #333;
   padding: 2px 5px;
   vertical-align: top;
+}
+#infoModalContent p.highlight {
+  border: 1px solid #333;
+  background-color: #ff8;
+  padding: 10px 20px;
+  width: fit-content;
 }
 
 footer {

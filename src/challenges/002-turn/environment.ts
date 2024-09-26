@@ -28,10 +28,11 @@ export default class Environment implements IEnvironment {
   }
 }
 
+const goalRadius = 30
 class Goal implements Steppable {
   agent
-  goalCenter = Vec2(300, 0)
-  goalDistanceSq = Math.pow(30 - radius, 2)
+  goalCenter = Vec2(300, 400)
+  goalDistanceSq = Math.pow(goalRadius - radius, 2)
 
   constructor(agent: Physiology) {
     this.agent = agent
@@ -49,7 +50,7 @@ class Goal implements Steppable {
   }
 
   render(cx: CanvasRenderingContext2D) {
-    let radius = Math.sin(this.timestamp * 3) * 4 + 30
+    let radius = Math.sin(this.timestamp * 3) * 4 + goalRadius
 
     if (this.goalDisabled) {
       cx.fillStyle = '#8882'

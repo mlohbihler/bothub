@@ -15,6 +15,7 @@ export default class Challenge<E extends IEnvironment> {
   #world: World
   // @ts-ignore
   #environment: E
+  stepCode: string | undefined
 
   constructor() {
     this.#controller = new Controller()
@@ -58,13 +59,19 @@ export default class Challenge<E extends IEnvironment> {
     const setupOptions: SetupOptions = Function(setupCode)()
     this.#controller.setup(setupOptions)
 
-    const stepCode = `${script}; step(evt, sensors, actuators);`
-    this.#controller.updateStepFunction(Function('evt', 'sensors', 'actuators', stepCode))
+    this.stepCode = `${script}; return step;`
+    this.#updateStepFunction()
   }
 
   reset() {
     this.#world = new World()
     this.#environment = this.createEnvironment()
+    // Reset the step function closure.
+    this.#updateStepFunction()
+  }
+
+  #updateStepFunction() {
+    this.#controller.updateStepFunction(Function(this.stepCode || '')())
   }
 
   getWorldOffset(): Vec2 | undefined {

@@ -57,19 +57,25 @@ export default class ErrorMessage {
         let lines = err.stack.split('\n')
         // Find the first index after the first element that doesn't include the file name where
         // the script was evaluated.
-        let toIndex = lines.findIndex((line, index) => index > 0 && !line.includes(`eval at saveScript`))
-        toIndex = Math.max(toIndex - 1, 1)
+        let toIndex = lines.findIndex((line, index) => index > 0 && !line.includes(`eval at #updateStepFunction`))
+        // toIndex = Math.max(toIndex - 1, 1)
         lines = lines.slice(0, toIndex)
 
         // Remove the noise in the text, and fix the line number, which is always 2 too high.
-        const regex = /\s+at (\w+) .*?, <anonymous>:(\d+):(\d+)/
+        const regex1 = /\s+at (\w+) .*?, <anonymous>:(\d+):(\d+)/
+        const regex2 = /.*?, <anonymous>:(\d+):(\d+)/
         return lines
           .map((line, index) => {
             if (index === 0) return line
-            const result = regex.exec(line)
+            let result = regex1.exec(line)
             if (result) {
               const [_, name, lineNumber, column] = result
               return `    at ${name} (<playerScript>:${parseInt(lineNumber) - 2}:${column})`
+            }
+            result = regex2.exec(line)
+            if (result) {
+              const [_, lineNumber, column] = result
+              return `    at step (<playerScript>:${parseInt(lineNumber) - 2}:${column})`
             }
             return line
           })

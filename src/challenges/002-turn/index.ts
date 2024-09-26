@@ -7,12 +7,12 @@ import info from './info.html?raw'
 import Challenge from '../challenge'
 import Environment from './environment'
 
-export default class Forward extends Challenge<Environment> {
+export default class Turn extends Challenge<Environment> {
   static getName() {
-    return 'forward' // 'hello world'?
+    return 'turn'
   }
   static getLabel() {
-    return 'Forward'
+    return 'Turn'
   }
 
   getHint() {
@@ -30,13 +30,12 @@ export default class Forward extends Challenge<Environment> {
   getRendererOptions(): Partial<RendererOptions> {
     return {
       scaleFactor: 2,
-      offset: Vec2(200, 700),
+      offset: Vec2(200, 1000),
       drawOrientations: true,
     }
   }
 
   getWorldOffset() {
-    // return this.environment.getAgent().bug.getPosition()
     return undefined
   }
 
