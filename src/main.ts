@@ -25,13 +25,14 @@ import GearButton from './assets/svg/fa-gear.svg?raw'
 // @ts-ignore
 import InfoButton from './assets/svg/fa-info.svg?raw'
 import gid from './gid'
+import { IEnvironment } from './@types'
 
 const STEP_TIME = 1 / FPS
 
 let editorView: EditorView
 let errorMessage: ErrorMessage
 let infoModal: InfoModal
-let challenge: Challenge
+let challenge: Challenge<IEnvironment>
 let runner: Runner
 let renderer: Renderer
 
@@ -65,7 +66,7 @@ window.onload = () => {
 }
 
 // @ts-ignore
-const localStorageName = (challenge: Challenge) => `goid-${challenge.constructor.getName()}`
+const localStorageName = (challenge: Challenge) => `gid-script-${challenge.constructor.getName()}`
 
 const initEditor = () => {
   const saveAndRun = () => {

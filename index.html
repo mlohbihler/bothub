@@ -9,20 +9,18 @@
   </head>
   <body>
     <div id="app">
-      <div id="container">
-        <div id="codeEditor"></div>
-        <div id="controls">
-          <div id="buttons"></div>
-          <div id="mousePositions">
-            <span>Canvas: <span id="canvasMousePosition"></span></span>
-            <span>World: <span id="worldMousePosition"></span></span>
-          </div>
-          <div id="debugProps"></div>
-          <div id="help"></div>
+      <div id="codeEditor"></div>
+      <div id="controls">
+        <div id="buttons"></div>
+        <div id="mousePositions">
+          <span>Canvas: <span id="canvasMousePosition"></span></span>
+          <span>World: <span id="worldMousePosition"></span></span>
         </div>
-        <div id="canvasContainer" tabindex="0">
-          <canvas id="canvas" width="100" height="100"></canvas>
-        </div>
+        <div id="help"></div>
+        <div id="debugProps"></div>
+      </div>
+      <div id="canvasContainer" tabindex="0">
+        <canvas id="canvas" width="1" height="1"></canvas>
       </div>
     </div>
     <div id="codeError">
@@ -31,9 +29,11 @@
     </div>
     <div id="infoModalVeil">
       <div id="infoModal">
-        <div id="infoModalClose"></div>
-        <div id="infoLogo"><img src="src/assets/images/logo_lg_transparent.png" /></div>
-        <div id="infoModalContent">This is where the content goes</div>
+        <div id="infoModalScroller">
+          <div id="infoModalClose"></div>
+          <div id="infoModalContent">This is where the content goes</div>
+          <div id="infoLogo"><img src="src/assets/images/logo_lg_transparent.png" /></div>
+        </div>
       </div>
     </div>
     <script type="module" src="./src/main.ts"></script>

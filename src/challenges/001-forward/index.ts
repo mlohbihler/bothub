@@ -6,9 +6,8 @@ import hint from './hint.js?raw'
 import info from './info.html?raw'
 import Challenge from '../challenge'
 import Environment from './environment'
-import { IEnvironment } from '../../@types'
 
-export default class Forward extends Challenge {
+export default class Forward extends Challenge<Environment> {
   static getName() {
     return 'forward' // 'hello world'?
   }
@@ -24,8 +23,8 @@ export default class Forward extends Challenge {
     return info
   }
 
-  createEnvironment(): IEnvironment {
-    return new Environment(this.world, this.controller)
+  createEnvironment(): Environment {
+    return new Environment(this.getWorld(), this.getController())
   }
 
   getRendererOptions(): Partial<RendererOptions> {
@@ -37,7 +36,11 @@ export default class Forward extends Challenge {
   }
 
   getWorldOffset() {
-    // return (this.environment as Environment).getAgent().bug.getPosition()
+    // return this.environment.getAgent().bug.getPosition()
     return undefined
+  }
+
+  render(cx: CanvasRenderingContext2D) {
+    this.getEnvironment().render(cx)
   }
 }

@@ -125,11 +125,16 @@ export default class Renderer {
     return cx
   }
 
+  clear() {
+    const { cx } = this
+    cx.resetTransform()
+    cx.clearRect(0, 0, cx.canvas.width, cx.canvas.height)
+  }
+
   render(world: World) {
     const { cx, scaleFactor, offset } = this
 
     cx.resetTransform()
-    cx.clearRect(0, 0, cx.canvas.width, cx.canvas.height)
     this.inWorldCanvas(cx => {
       const options = {
         lineWidth: this.lineWidth,

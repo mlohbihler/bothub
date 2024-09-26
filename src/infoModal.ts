@@ -2,6 +2,9 @@ import { createElement, getRequiredElementById } from './util'
 // @ts-ignore
 import CloseButton from './assets/svg/fa-close.svg?raw'
 import Challenge from './challenges/challenge'
+import { IEnvironment } from './@types'
+// @ts-ignore
+import GenericInfo from './assets/genericInfo.html?raw'
 
 export default class InfoModal {
   veilElement
@@ -35,8 +38,9 @@ export default class InfoModal {
     this.veilElement.style.opacity = '1'
   }
 
-  show(challenge: Challenge) {
-    this.contentElement.innerHTML = challenge.getInfo()
+  show(challenge: Challenge<IEnvironment>) {
+    const content = `${challenge.getInfo()}${GenericInfo}`
+    this.contentElement.innerHTML = content
 
     this.visible = true
     this.veilElement.style.display = ''

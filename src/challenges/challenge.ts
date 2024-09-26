@@ -2,7 +2,7 @@ import { Vec2, World } from 'planck'
 import { IEnvironment, SetupOptions } from '../@types'
 import Controller from './controller'
 
-export default class Challenge {
+export default class Challenge<E extends IEnvironment> {
   static getName() {
     throw 'not implemented'
   }
@@ -10,14 +10,14 @@ export default class Challenge {
     throw 'not implemented'
   }
 
-  controller: Controller
+  #controller: Controller
   // @ts-ignore
-  world: World
+  #world: World
   // @ts-ignore
-  environment: IEnvironment
+  #environment: E
 
   constructor() {
-    this.controller = new Controller()
+    this.#controller = new Controller()
     this.reset()
   }
 
@@ -29,20 +29,24 @@ export default class Challenge {
     throw 'not implemented'
   }
 
-  createEnvironment(): IEnvironment {
+  createEnvironment(): E {
     throw 'not implemented'
   }
 
   getWorld(): World {
-    return this.world
+    return this.#world
   }
 
-  getEnvironment(): IEnvironment {
-    return this.environment
+  getEnvironment(): E {
+    return this.#environment
   }
 
   getRendererOptions() {
     return {}
+  }
+
+  getController() {
+    return this.#controller
   }
 
   saveScript(script: string) {
@@ -52,18 +56,20 @@ export default class Challenge {
 
     const setupCode = `${script}; return typeof(setup) === 'undefined' ? {} : setup();`
     const setupOptions: SetupOptions = Function(setupCode)()
-    this.controller.setup(setupOptions)
+    this.#controller.setup(setupOptions)
 
     const stepCode = `${script}; step(evt, sensors, actuators);`
-    this.controller.updateStepFunction(Function('evt', 'sensors', 'actuators', stepCode))
+    this.#controller.updateStepFunction(Function('evt', 'sensors', 'actuators', stepCode))
   }
 
   reset() {
-    this.world = new World()
-    this.environment = this.createEnvironment()
+    this.#world = new World()
+    this.#environment = this.createEnvironment()
   }
 
   getWorldOffset(): Vec2 | undefined {
     return undefined
   }
+
+  render(_cx: CanvasRenderingContext2D) {}
 }

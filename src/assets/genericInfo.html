@@ -1,0 +1,165 @@
+<h1>README</h1>
+
+<p>
+  The Game of Intelligen Design (GID) is a simulation platform for writing system control software. Honestly, it's more
+  fun than that sounds.
+</p>
+
+<h2>Concepts</h2>
+<dl>
+  <dt>Challenges</dt>
+  <dd>
+    The game is split into sections called <strong>challenges</strong>, which are like levels except that you don't
+    really need to do them in any particular order. You complete challenges by achieving a given goal.
+  </dd>
+
+  <dt>Agent</dt>
+  <dd>
+    Challenges include at least one <strong>agent</strong>, which is the thing that your script controls. The agent(s)
+    exist in an environment, with which it interacts.
+  </dd>
+
+  <dt>Script</dt>
+  <dd>
+    The left side of the interface has an editor with which you can write your javascript code. It needs to have a
+    <code>step</code> function, and optionally can also have a <code>setup</code> function. See below for further
+    details of how to use these functions. The setup function is called once every time you save your script. The step
+    function is called 60 times a second (usually), and is how you control the agent.
+  </dd>
+
+  <dt>Sensors</dt>
+  <dd>
+    <strong>Sensor</strong>s are the data that the agent is aware of, like what it can feel, smell, see, etc. Your
+    script will use this data to decide what the agent should do. Each challenge will define it's own sensors, so you
+    should always check the challenge docs.
+  </dd>
+
+  <dt>Actuators</dt>
+  <dd>
+    <strong>Actuator</strong>s are the things that the agent can do, like move, turn, eat, etc. Each challenge will
+    define it's own actuators, so you should always check the challenge docs.
+  </dd>
+</dl>
+
+<h2>Script Details</h2>
+<p>
+  Your script is the link between sensors and actuators, taking what the agent can sense, and turning that into action.
+  The main things you need to know about are
+</p>
+
+<h3>Setup Function</h3>
+<p>
+  The <code>setup</code> function should return a hash object containing the setup options. Currently the only thing to
+  return is key handlers, for which you can use the <code>keyHandlers</code> key. The Forward challenge has an example
+  of key handlers. But a useful thing to know is that there are two <code>action</code> types: <code>repeat</code> and
+  <code>debounce</code>. The former will cause the handler to run as long as the key is depressed. The latter will
+  ensure that the handler is only called once for every time the key is pressed.
+</p>
+
+<h3>Step Function</h3>
+<p>The <code>step</code> function takes three parameters and doesn't return anything.</p>
+<table>
+  <thead>
+    <td>Parameter</td>
+    <td>Type</td>
+    <td>Description</td>
+  </thead>
+  <tr>
+    <td>evt</td>
+    <td>Object / Hash</td>
+    <td>
+      The step event contains game data pertaining to the current step. These are the keys:
+      <dl>
+        <dt>step</dt>
+        <dd>An integer representing the current simulation step, starting from 0.</dd>
+      </dl>
+      <dl>
+        <dt>timestamp</dt>
+        <dd>The number of seconds since the start of the simulation, including 3 millisecond decimals.</dd>
+      </dl>
+      <dl>
+        <dt>keyEvents</dt>
+        <dd>
+          An array of DOM <code>KeyboardEvent</code> objects. The best way to use this data is with
+          <code>keyHandlers</code> in your <code>setup</code> code.
+        </dd>
+      </dl>
+      <dl>
+        <dt>debugProps</dt>
+        <dd>
+          An object that allows you to add arbitrary key/value entries that will be displayed in the interface. Here's
+          an example of how to use this:
+          <br /><br />
+          <code class="snippet">evt.debugProps.Time = GID.formatTime(evt.timestamp)</code>
+        </dd>
+      </dl>
+      <dl>
+        <dt>debugRenderers</dt>
+        <dd>
+          An array that allows you to push functions that draw onto the graphics context. Functions accept a helper
+          parameter, which is an instance of a class that provides a number of convenience methods. Here is an example
+          of a function you could write:
+          <br /><br />
+          <code class="snippet">evt.debugRenderers.push(h => h.dot(300, 100, 2, '#f88'))</code>
+          <br />
+          This uses the <code>dot</code> method to draw a red-ish dot at x=300 and y=100 with radius 2. Here are the
+          methods you can call on the helper class:
+
+          <br /><br />
+          <code class="snippet">
+            dot(x: number, y: number, r: number, style: string)<br />
+            circle(x: number, y: number, r: number, style: string, width = 1)<br />
+            line(sx: number, sy: number, ex: number, ey: number, style: string, width = 3)<br />
+            rect(x1: number, y1: number, x2: number, y2: number, style: string, width = 3)<br />
+            getContext()<br />
+          </code>
+          <br />
+
+          The method <code>getContext</code> returns the graphics context, allowing you to write your own custom
+          rendering code.
+        </dd>
+      </dl>
+    </td>
+  </tr>
+  <tr>
+    <td>sensors</td>
+    <td>Object / Hash</td>
+    <td>The sensors for the current challenge. See the challenge docs for details.</td>
+  </tr>
+  <tr>
+    <td>actuators</td>
+    <td>Object / Hash</td>
+    <td>The actuators for the current challenge. See the challenge docs for details.</td>
+  </tr>
+</table>
+
+<h3>Globals</h3>
+<p>
+  The GID namespace provides a number of convenience functions you can use in your scripts. These include:
+  <br /><br />
+  <code class="snippet">
+    formatTime(time: number)<br />
+    shorten(n: number) // Removes excess decimals from the given number, preserving precision<br />
+  </code>
+</p>
+
+<h2>Boring Technical Details</h2>
+<p>
+  In case you were wondering, this game has no backend slash server-side. Your scripts, progress, and other state are
+  stored using local browser storgae. The good news is that there you don't need to registers or anything. The downside
+  is that your scripts can't be sync'ed across your devices, you can't compare your progress with others, and neat stuff
+  like that. Also, you may find that your scripts get pretty big and cumbersome for the inline editor. We are
+  considering other delivery mechanisms that would address problems like these.
+</p>
+
+<p>
+  Players of this game are probably going to already know this - since it's likely that you already have software
+  development experience - but if you open your browser's debugging tools you'll have access to the console, debugging,
+  local storage, profiling, and other rather useful stuff.
+</p>
+
+<hr />
+<footer>
+  &copy; 2024. The Game of Intelligent Design is brought to you by Serotonin Software, proud maker of things no one knew
+  they wanted.
+</footer>

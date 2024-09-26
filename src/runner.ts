@@ -1,4 +1,4 @@
-import { DebugProps, StepEvent } from './@types'
+import { DebugProps, IEnvironment, StepEvent } from './@types'
 import Challenge from './challenges/challenge'
 import ErrorMessage from './errorMessage'
 import Renderer from './planck/renderer'
@@ -17,7 +17,7 @@ export default class Runner {
   toggleRunner
 
   constructor(
-    challenge: Challenge,
+    challenge: Challenge<IEnvironment>,
     renderer: Renderer,
     delta: number,
     debugPropsElement: HTMLElement,
@@ -81,7 +81,7 @@ export default class Runner {
 
     //
     // Then render it.
-    this.renderer.render(this.challenge.getWorld())
+    this.render()
     this.renderer.inWorldCanvas(cx => {
       const h = new DebugHelper(cx)
       evt.debugRenderers.forEach(d => d(h))
@@ -108,6 +108,12 @@ export default class Runner {
     return stop
   }
 
+  render() {
+    this.renderer.clear()
+    this.challenge.render(this.renderer.getWorldCanvas())
+    this.renderer.render(this.challenge.getWorld())
+  }
+
   running() {
     return !isNil(this.timeoutId)
   }
@@ -119,7 +125,7 @@ export default class Runner {
 
   reset() {
     this.evt.step = 0
-    this.renderer.render(this.challenge.getWorld())
+    this.render()
     this.debugPropsElement.replaceChildren()
   }
 

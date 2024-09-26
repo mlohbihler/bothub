@@ -30,30 +30,11 @@ body {
   min-height: 100vh;
 }
 
-/* button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
-
 #app {
   width: 100%;
   height: 100vh;
-  margin: 0 auto;
-  /* text-align: center; */
+  display: flex;
+  /* margin: 0 auto; */
 }
 
 @media (prefers-color-scheme: light) {
@@ -70,21 +51,16 @@ button:focus-visible {
 }
 
 #codeEditor {
-  /* min-width: 500px; */
-  width: 50vw;
+  width: 30vw;
   height: 100vh;
   color: #001111;
   background-color: #ddd;
   overflow: auto;
+  resize: horizontal;
 }
 
 #codeEditor > div {
   height: 100%;
-}
-
-#container {
-  background-color: #001111;
-  display: flex;
 }
 
 #controls {
@@ -95,20 +71,14 @@ button:focus-visible {
   font-size: 12px;
   gap: 10px;
   padding: 10px;
-  flex: 1;
-  max-width: 250px;
-  min-width: 250px;
+  width: 250px;
   overflow-y: auto;
 }
 
 #debugProps,
 #mousePositions {
-  /* background-color: #031414; */
   display: flex;
   flex-direction: column;
-  /* gap: 5px; */
-  /* padding: 10px; */
-  /* flex: 1; */
   max-width: 250px;
   min-width: 250px;
 }
@@ -119,7 +89,8 @@ button:focus-visible {
 }
 
 #canvasContainer {
-  width: 100%;
+  background-color: #001111;
+  flex-grow: 1;
   height: 100vh;
   overflow: hidden; /* keeps a scrollbar from appearing due to canvas resize */
   outline: none;
@@ -176,7 +147,7 @@ button:focus-visible {
 }
 #help {
   justify-content: left;
-  padding-top: 10px;
+  padding-top: 3px;
   gap: 10px;
 }
 
@@ -202,6 +173,14 @@ button:focus-visible {
   height: 43.5px;
   position: relative;
   top: 3px;
+}
+.fa.info {
+  padding: 0 3px;
+  position: relative;
+  top: -1px;
+}
+.fa.grip-vertical {
+  cursor: ew-resize;
 }
 
 #help .fa {
@@ -230,17 +209,56 @@ button:focus-visible {
   -webkit-box-sizing: border-box;
 
   position: relative;
-  padding: 20px;
+  padding: 20px 0;
   background-color: #eee;
   border-radius: 10px;
   height: 100%;
 }
+#infoModalScroller {
+  padding: 0 20px;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-color: #333 #eee;
+}
 #infoModalContent {
   color: #333;
+  font-family: Helvetica;
 }
 #infoLogo {
-  display: inline;
-  position: absolute;
-  right: 20px;
-  top: 10px;
+  text-align: center;
+}
+#infoModalContent dt {
+  font-weight: 600;
+}
+#infoModalContent code {
+  background-color: #ccc;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+#infoModalContent code.snippet {
+  display: block;
+  background-color: #333;
+  color: #eee;
+  padding: 10px;
+  width: fit-content;
+  border-radius: 5px;
+}
+#infoModalContent table {
+  border-collapse: collapse;
+  background-color: #ddd;
+  border-radius: 5px;
+  margin: 5px 10px;
+}
+#infoModalContent thead {
+  font-weight: 600;
+}
+#infoModalContent td {
+  border: 1px solid #333;
+  padding: 2px 5px;
+  vertical-align: top;
+}
+
+footer {
+  font-size: smaller;
+  font-style: italic;
 }
