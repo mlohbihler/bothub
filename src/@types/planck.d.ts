@@ -1,11 +1,8 @@
-// import * as planck from 'planck'
+import 'planck'
 
-// module planck {
-//   interface Style {
-//     lineWidth?: number
-//     drawOrientation?: boolean
-//   }
-// // }
-
-// const x: Style = {}
-// x.
+module 'planck' {
+  interface Style {
+    lineWidth?: number
+    drawOrientation?: boolean
+  }
+}
