@@ -13,6 +13,10 @@ import Challenge from './challenges/challenge'
 import * as eslint from 'eslint-linter-browserify'
 import ErrorMessage from './errorMessage'
 import InfoModal from './infoModal'
+import ConfigModal from './configModal'
+import gid from './gid'
+import { IEnvironment } from './@types'
+
 // @ts-ignore
 import PlayButton from './assets/svg/fa-play.svg?raw'
 // @ts-ignore
@@ -20,19 +24,25 @@ import PauseButton from './assets/svg/fa-pause.svg?raw'
 // @ts-ignore
 import ForwardStepButton from './assets/svg/fa-forward-step.svg?raw'
 // @ts-ignore
-import BackwardButton from './assets/svg/fa-backward.svg?raw'
+import BackwardButton from './assets/svg/fa-backward-fast.svg?raw'
+// @ts-ignore
+import MouseIcon from './assets/svg/fa-arrow-pointer.svg?raw'
 // @ts-ignore
 import GearButton from './assets/svg/fa-gear.svg?raw'
 // @ts-ignore
 import InfoButton from './assets/svg/fa-info.svg?raw'
-import gid from './gid'
-import { IEnvironment } from './@types'
+// @ts-ignore
+import NextButton from './assets/svg/fa-forward-fast.svg?raw'
+import { getegid } from 'process'
 
 const STEP_TIME = 1 / FPS
+const LOCAL_STORAGE_PROGRESS_KEY = 'gid-progress'
 
+let challenges: (typeof Challenge<IEnvironment>)[]
 let editorView: EditorView
 let errorMessage: ErrorMessage
 let infoModal: InfoModal
+let configModal: ConfigModal
 let challenge: Challenge<IEnvironment>
 let runner: Runner
 let renderer: Renderer
@@ -40,31 +50,19 @@ let renderer: Renderer
 window.onload = () => {
   window.GID = gid
 
+  initChallenges()
   initEditor()
   const canvas = initCanvas()
   errorMessage = new ErrorMessage('codeError', 'codeErrorContent', 'codeErrorClose')
   infoModal = new InfoModal()
+  configModal = new ConfigModal()
   initButtons()
-
-  // challenge = new Forward()
-  challenge = new Turn()
-  editorView.dispatch({
-    changes: {
-      from: 0,
-      to: editorView.state.doc.length,
-      insert: localStorage.getItem(localStorageName(challenge)) || challenge.getHint(),
-    },
-  })
-  updateScript()
-
-  // Define the renderer
-  const ctx = getContext(canvas) as CanvasRenderingContext2D
-  renderer = new Renderer(ctx, challenge.getRendererOptions())
-
-  runner = new Runner(challenge, renderer, STEP_TIME, getRequiredElementById('debugProps'), errorMessage, toggleRunner)
-  toggleRunner()
-
   mouseListeners(canvas)
+  setChallenge()
+}
+
+const initChallenges = () => {
+  challenges = [Forward, Turn]
 }
 
 // @ts-ignore
@@ -136,15 +134,29 @@ const initButtons = () => {
   createElement(buttons, ForwardStepButton, { id: 'stepButton' }).addEventListener('click', tick)
   fixButtons()
 
+  createElement(getRequiredElementById('mouseIcon'), MouseIcon)
+
   const help = getRequiredElementById('help')
-  createElement(help, GearButton, { id: 'gearButton' }).addEventListener('click', () => alert('TODO'))
-  createElement(help, InfoButton, { id: 'infoButton' }).addEventListener('click', () => infoModal.show(challenge))
+  createElement(help, GearButton, { id: 'gearButton' }).addEventListener('click', () => configModal.show())
+  createElement(help, InfoButton, { id: 'infoButton' }).addEventListener('click', () =>
+    infoModal.showChallenge(challenge),
+  )
+
+  createElement(getRequiredElementById('nextChallengeIcon'), NextButton)
+  getRequiredElementById('nextChallenge').addEventListener('click', setNextChallenge)
+
+  const mousePosition = getRequiredElementById('mousePositionsContainer')
+  mousePosition.style.display = 'none'
+  getRequiredElementById('mousePositionCheckbox').addEventListener('change', evt => {
+    mousePosition.style.display = (evt.target as HTMLInputElement)?.checked ? '' : 'none'
+  })
 }
 
 const resetChallenge = () => {
   challenge.reset()
   renderer.recenter()
   runner.reset()
+  challengeCompleteAnimation?.stop()
 }
 
 const mouseListeners = (canvas: HTMLCanvasElement) => {
@@ -210,4 +222,116 @@ const fixButtons = () => {
     getRequiredElementById('playButton').style.display = ''
     getRequiredElementById('stepButton').classList.remove('disabled')
   }
+}
+
+let challengeCompleteAnimation: ChallengeCompleteAnimation | undefined
+const challengeComplete = () => {
+  if (!challengeCompleteAnimation) {
+    challengeCompleteAnimation = new ChallengeCompleteAnimation()
+  }
+}
+
+class ChallengeCompleteAnimation {
+  veilOpacity = 0
+  timeout: NodeJS.Timeout | undefined
+
+  constructor() {
+    this.setOpacity()
+    this.setVisibility('visible')
+    this.start()
+  }
+
+  start() {
+    this.timeout = setTimeout(() => this.animate(), 50)
+  }
+
+  animate() {
+    this.veilOpacity += 0.04
+    this.setOpacity()
+    if (this.veilOpacity < 1) {
+      this.start()
+    } else {
+      runner.stop()
+      fixButtons()
+    }
+  }
+
+  setOpacity(value = this.veilOpacity) {
+    getRequiredElementById('canvasVeil').style.opacity = value.toString()
+  }
+
+  setVisibility(value: 'visible' | 'hidden') {
+    getRequiredElementById('canvasVeil').style.visibility = value
+  }
+
+  stop() {
+    this.setOpacity(0)
+    clearTimeout(this.timeout)
+    this.setVisibility('hidden')
+    challengeCompleteAnimation = undefined
+  }
+}
+
+const isLastChallenge = () => {
+  if (challenge) {
+    return challenge.constructor === challenges[challenges.length - 1]
+  }
+  return false
+}
+const setNextChallenge = () => {
+  let nextChallengeClass
+  if (challenge) {
+    let currentIndex = challenges.findIndex(c => c === challenge.constructor)
+    if (currentIndex < challenges.length - 1) {
+      nextChallengeClass = challenges[currentIndex + 1]
+    } else {
+      // TODO: no next challenge. Display a done message. Or, link to the vscode plugin.
+    }
+  } else {
+    nextChallengeClass = challenges[0]
+  }
+
+  setChallenge(nextChallengeClass)
+}
+const setChallenge = (clazz?: typeof Challenge<IEnvironment>) => {
+  if (!clazz) {
+    const name = localStorage.getItem(LOCAL_STORAGE_PROGRESS_KEY) as string
+    clazz = challenges.find(c => c.getName() === name)
+    if (!clazz) {
+      clazz = challenges[0]
+    }
+  }
+
+  challenge = new clazz()
+  localStorage.setItem(LOCAL_STORAGE_PROGRESS_KEY, clazz.getName())
+  getRequiredElementById('challengeName').innerText = challenge.getLabel()
+
+  editorView.dispatch({
+    changes: {
+      from: 0,
+      to: editorView.state.doc.length,
+      insert: localStorage.getItem(localStorageName(challenge)) || challenge.getHint(),
+    },
+  })
+  updateScript()
+
+  runner?.stop()
+  challengeCompleteAnimation?.stop()
+
+  // Define the renderer
+  renderer = new Renderer(
+    getContext(getRequiredElementById('canvas') as HTMLCanvasElement) as CanvasRenderingContext2D,
+    challenge.getRendererOptions(),
+  )
+
+  runner = new Runner(
+    challenge,
+    renderer,
+    STEP_TIME,
+    getRequiredElementById('debugProps'),
+    errorMessage,
+    toggleRunner,
+    challengeComplete,
+  )
+  toggleRunner()
 }

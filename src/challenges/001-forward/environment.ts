@@ -26,6 +26,10 @@ export default class Environment implements IEnvironment {
   render(cx: CanvasRenderingContext2D) {
     this.goal.render(cx)
   }
+
+  isComplete() {
+    return this.goal.isComplete()
+  }
 }
 
 class Goal implements Steppable {
@@ -78,5 +82,9 @@ class Goal implements Steppable {
       cx.fill()
       cx.stroke()
     }
+  }
+
+  isComplete() {
+    return this.goalAchieved
   }
 }

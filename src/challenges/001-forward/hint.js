@@ -9,13 +9,15 @@
 //
 // The `step` function runs 60 times a second (usually). The
 // sensors tell what the agent "knows" at the given moment,
-// which in this challenge isn't much, but later this will
+// which in this challenge is nothing, but later this will
 // include what the agent can see, feel, taste, smell, ...
 // that sort of thing.
 //
 // Actuators are what the agent can do. Again, in this challenge
 // it can only move forward and back using the `speed` attribute,
 // and turn using the `turn` attribute.
+//
+// Click the 'i' button in the controls for more information.
 const step = (evt, sensors, actuators) => {
   // Debug props allow you to see in the interface how things
   // are changing. Here we add the `Time` key and set it to
@@ -25,7 +27,7 @@ const step = (evt, sensors, actuators) => {
 
   // Uncomment the line below and press Ctrl-s to save your
   // script. This will complete this challenge.
-  // actuators.speed = 1
+  // actuators.speed = 0.3
 
   // If you want to see what turning looks like, uncomment
   // the line below.

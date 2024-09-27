@@ -43,4 +43,8 @@ export default class Forward extends Challenge<Environment> {
   render(cx: CanvasRenderingContext2D) {
     this.getEnvironment().render(cx)
   }
+
+  isComplete() {
+    return this.getEnvironment().isComplete()
+  }
 }

@@ -6,20 +6,33 @@
     <title>Game of Intelligent Design</title>
     <link rel="stylesheet" type="text/css" href="src/assets/style/style.css" media="screen" />
     <link rel="shortcut icon" type="x-icon" href="src/assets/images/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/century-gothic" />
   </head>
   <body>
     <div id="app">
       <div id="codeEditor"></div>
       <div id="controls">
         <div id="buttons"></div>
-        <div id="mousePositions">
-          <span>Canvas: <span id="canvasMousePosition"></span></span>
-          <span>World: <span id="worldMousePosition"></span></span>
+        <div id="challengeHelp">
+          <div id="challengeName"></div>
+          <div id="help"></div>
         </div>
-        <div id="help"></div>
+        <div id="mousePositionsContainer">
+          <div id="mouseIcon"></div>
+          <div id="mousePositions">
+            <span>Canvas: <span id="canvasMousePosition"></span></span>
+            <span>World: <span id="worldMousePosition"></span></span>
+          </div>
+        </div>
         <div id="debugProps"></div>
       </div>
       <div id="canvasContainer" tabindex="0">
+        <div id="canvasVeil">
+          <div id="canvasVeilContent">
+            <div>Completed!</div>
+            <div id="nextChallenge">Next <span id="nextChallengeIcon"></span></div>
+          </div>
+        </div>
         <canvas id="canvas" width="1" height="1"></canvas>
       </div>
     </div>
@@ -27,12 +40,23 @@
       <div id="codeErrorClose"></div>
       <div id="codeErrorContent"></div>
     </div>
-    <div id="infoModalVeil">
-      <div id="infoModal">
-        <div id="infoModalScroller">
+    <div id="infoModalVeil" class="modalVeil">
+      <div id="infoModal" class="modal">
+        <div class="modalScroller">
           <div id="infoModalClose"></div>
           <div id="infoModalContent">This is where the content goes</div>
           <div id="infoLogo"><img src="src/assets/images/logo_lg_transparent.png" /></div>
+        </div>
+      </div>
+    </div>
+    <div id="configModalVeil" class="modalVeil">
+      <div id="configModal" class="modal">
+        <div class="modalScroller">
+          <div id="configModalClose"></div>
+          <div id="configModalContent">
+            <input id="mousePositionCheckbox" type="checkbox" />
+            <label for="mousePositionCheckbox">Show mouse position</label>
+          </div>
         </div>
       </div>
     </div>

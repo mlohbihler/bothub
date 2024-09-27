@@ -3,10 +3,10 @@ import { IEnvironment, SetupOptions } from '../@types'
 import Controller from './controller'
 
 export default class Challenge<E extends IEnvironment> {
-  static getName() {
+  static getName(): string {
     throw 'not implemented'
   }
-  static getLabel() {
+  static getLabel(): string {
     throw 'not implemented'
   }
 
@@ -20,6 +20,14 @@ export default class Challenge<E extends IEnvironment> {
   constructor() {
     this.#controller = new Controller()
     this.reset()
+  }
+
+  getName() {
+    return (this.constructor as typeof Challenge).getName()
+  }
+
+  getLabel() {
+    return (this.constructor as typeof Challenge).getLabel()
   }
 
   getHint() {
@@ -79,4 +87,8 @@ export default class Challenge<E extends IEnvironment> {
   }
 
   render(_cx: CanvasRenderingContext2D) {}
+
+  isComplete() {
+    return false
+  }
 }

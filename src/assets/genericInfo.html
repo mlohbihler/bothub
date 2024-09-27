@@ -5,6 +5,7 @@
   fun than that sounds.
 </p>
 
+<a id="concepts"></a>
 <h2>Concepts</h2>
 <dl>
   <dt>Challenges</dt>
@@ -41,12 +42,14 @@
   </dd>
 </dl>
 
+<a id="scripts"></a>
 <h2>Script Details</h2>
 <p>
   Your script is the link between sensors and actuators, taking what the agent can sense, and turning that into action.
   The main things you need to know about are
 </p>
 
+<a id="scripts-setup"></a>
 <h3>Setup Function</h3>
 <p>
   The <code>setup</code> function should return a hash object containing the setup options. Currently the only thing to
@@ -56,6 +59,7 @@
   ensure that the handler is only called once for every time the key is pressed.
 </p>
 
+<a id="scripts-step"></a>
 <h3>Step Function</h3>
 <p>The <code>step</code> function takes three parameters and doesn't return anything.</p>
 <table>
@@ -133,6 +137,7 @@
   </tr>
 </table>
 
+<a id="scripts-globals"></a>
 <h3>Globals</h3>
 <p>
   The GID namespace provides a number of convenience functions you can use in your scripts. These include:
@@ -143,6 +148,7 @@
   </code>
 </p>
 
+<a id="technical"></a>
 <h2>Boring Technical Details</h2>
 <p>
   In case you were wondering, this game has no backend slash server-side. Your scripts, progress, and other state are
@@ -157,6 +163,16 @@
   development experience - but if you open your browser's debugging tools you'll have access to the console, debugging,
   local storage, profiling, and other rather useful stuff.
 </p>
+
+<!--
+<h2>Even More Boring... Philosohy</h2>
+<p>
+  So, what is the actual good of a game that you can't play yourself? Why would anyone want the computer to have all the
+  fun? I get it. It's true that you need to be at a boss level of nerdiness to want to spend your game playing hours
+  writing code. Whatever... you know who you are.
+</p>
+<p>Believe it or not, this game is meant to be a path toward AGI.</p>
+-->
 
 <hr />
 <footer>

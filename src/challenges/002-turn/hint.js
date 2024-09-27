@@ -14,7 +14,7 @@
 //       state = 'move'
 //     }
 //   } else {
-//     actuators.speed = 4
+//     actuators.speed = 0.5
 //   }
 
 //   evt.debugProps.Count = count
@@ -22,6 +22,6 @@
 
 // Turn and move
 // const step = (evt, sensors, actuators) => {
-//   actuators.speed = 4
+//   actuators.speed = 2
 //   actuators.turn = 0.005
 // }

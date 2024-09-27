@@ -15,6 +15,7 @@ export default class Runner {
   debugPropsElement
   errorMessage
   toggleRunner
+  challengeCompleteCallback
 
   constructor(
     challenge: Challenge<IEnvironment>,
@@ -23,6 +24,7 @@ export default class Runner {
     debugPropsElement: HTMLElement,
     errorMessage: ErrorMessage,
     toggleRunner: () => void,
+    challengeCompleteCallback: () => void,
   ) {
     this.renderer = renderer
     this.challenge = challenge
@@ -31,6 +33,7 @@ export default class Runner {
     this.debugPropsElement = debugPropsElement
     this.errorMessage = errorMessage
     this.toggleRunner = toggleRunner
+    this.challengeCompleteCallback = challengeCompleteCallback
 
     this.evt = {
       step: 0,
@@ -96,6 +99,9 @@ export default class Runner {
     let stop = false
     try {
       this.challenge.getEnvironment().step(evt)
+      if (this.challenge.isComplete()) {
+        this.challengeCompleteCallback()
+      }
     } catch (err) {
       this.errorMessage.show(err)
       stop = true
