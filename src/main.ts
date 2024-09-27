@@ -2,6 +2,7 @@ import { createElement, getContext, getRequiredElementById } from './util'
 import Renderer from './planck/renderer'
 import { FPS } from './planck/boxUtil'
 import Forward from './challenges/001-forward'
+import Turn from './challenges/002-turn'
 import { basicSetup } from 'codemirror'
 import { javascript, esLint } from '@codemirror/lang-javascript'
 import { linter, lintGutter } from '@codemirror/lint'
@@ -45,7 +46,8 @@ window.onload = () => {
   infoModal = new InfoModal()
   initButtons()
 
-  challenge = new Forward()
+  // challenge = new Forward()
+  challenge = new Turn()
   editorView.dispatch({
     changes: {
       from: 0,
@@ -141,6 +143,7 @@ const initButtons = () => {
 
 const resetChallenge = () => {
   challenge.reset()
+  renderer.recenter()
   runner.reset()
 }
 
@@ -158,7 +161,7 @@ const mouseListeners = (canvas: HTMLCanvasElement) => {
       renderer.moveOffset(evt.movementX, evt.movementY)
       if (!runner.running()) {
         // Too much flashing going on when the running is also refreshing
-        renderer.render(challenge.getWorld())
+        runner.render()
       }
     }
   })
@@ -172,7 +175,7 @@ const mouseListeners = (canvas: HTMLCanvasElement) => {
     renderer.zoom(evt.deltaY > 0, evt.offsetX, evt.offsetY)
     if (!runner.running()) {
       // Too much flashing going on when the running is also refreshing
-      renderer.render(challenge.getWorld())
+      runner.render()
     }
   })
 }
