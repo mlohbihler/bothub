@@ -29,7 +29,6 @@ export default class Physiology {
       position: Vec2(offsetX, offsetY),
     })
     this.body = this.bug.createFixture({
-      // restitution: 0.8,
       userData: agentBodyId,
       shape: Circle(radius),
     })
