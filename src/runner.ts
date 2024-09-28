@@ -44,7 +44,7 @@ export default class Runner {
       debugHelper: new DebugHelper(renderer.getWorldCanvas()),
     }
 
-    this.reset()
+    this.reset() // To reset the debugProps.
   }
 
   addKeyEvent(evt: KeyboardEvent) {
