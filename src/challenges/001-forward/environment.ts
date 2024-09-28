@@ -48,8 +48,9 @@ class Goal implements Steppable {
 
   step(evt: StepEvent) {
     this.timestamp = evt.timestamp
-    this.goalDisabled ||= !!evt.keyEvents.length
-    this.goalAchieved ||= Vec2.distanceSquared(this.goalCenter, this.agent.bug.getPosition()) < this.goalDistanceSq
+    this.goalDisabled ||= !this.goalAchieved && !!evt.keyEvents.length
+    this.goalAchieved ||=
+      !this.goalDisabled && Vec2.distanceSquared(this.goalCenter, this.agent.bug.getPosition()) < this.goalDistanceSq
   }
 
   render(cx: CanvasRenderingContext2D) {
