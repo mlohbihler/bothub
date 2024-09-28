@@ -30,7 +30,7 @@ export default class Modal {
         this.hide()
       }
     }
-    this.veilElement.style.opacity = '1'
+    this.veilElement.style.opacity = '1' // Prevents the modal from flashing upon page load.
   }
 
   show() {
