@@ -43,6 +43,8 @@ export default class Runner {
       keyEvents: this.keyEvents,
       debugHelper: new DebugHelper(renderer.getWorldCanvas()),
     }
+
+    this.reset()
   }
 
   addKeyEvent(evt: KeyboardEvent) {

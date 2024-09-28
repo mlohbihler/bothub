@@ -33,12 +33,22 @@ import GearButton from './assets/svg/fa-gear.svg?raw'
 import InfoButton from './assets/svg/fa-info.svg?raw'
 // @ts-ignore
 import NextButton from './assets/svg/fa-forward-fast.svg?raw'
-import { getegid } from 'process'
+
+// TODO: don't allow changing challenge to beyond what has already been completed until the basics are done.
+
+interface Config {
+  challengeName?: string
+  showMousePosition: boolean
+}
+const defaultConfig: Config = {
+  showMousePosition: false,
+}
 
 const STEP_TIME = 1 / FPS
-const LOCAL_STORAGE_PROGRESS_KEY = 'gid-progress'
+const LOCAL_STORAGE_CONFIG_KEY = 'gid-config'
 
 let challenges: (typeof Challenge<IEnvironment>)[]
+let config: Config
 let editorView: EditorView
 let errorMessage: ErrorMessage
 let infoModal: InfoModal
@@ -57,6 +67,7 @@ window.onload = () => {
   infoModal = new InfoModal()
   configModal = new ConfigModal()
   initButtons()
+  initConfig()
   mouseListeners(canvas)
   setChallenge()
 }
@@ -144,12 +155,29 @@ const initButtons = () => {
 
   createElement(getRequiredElementById('nextChallengeIcon'), NextButton)
   getRequiredElementById('nextChallenge').addEventListener('click', setNextChallenge)
+}
+
+const initConfig = () => {
+  config = { ...defaultConfig, ...JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONFIG_KEY) || '{}') }
 
   const mousePosition = getRequiredElementById('mousePositionsContainer')
-  mousePosition.style.display = 'none'
+  mousePosition.style.display = config.showMousePosition ? '' : 'none'
   getRequiredElementById('mousePositionCheckbox').addEventListener('change', evt => {
-    mousePosition.style.display = (evt.target as HTMLInputElement)?.checked ? '' : 'none'
+    const value = (evt.target as HTMLInputElement)?.checked
+    mousePosition.style.display = value ? '' : 'none'
+    saveConfig({ showMousePosition: value })
   })
+
+  const challengeSelect = getRequiredElementById('challengeSelect') as HTMLSelectElement
+  challenges.forEach(c => challengeSelect.options.add(new Option(c.getLabel(), c.getName())))
+  challengeSelect.addEventListener('change', evt =>
+    setChallenge(challenges.find(c => c.getName() === (evt.target as HTMLSelectElement)?.selectedOptions[0].value)),
+  )
+}
+
+const saveConfig = (update: Partial<Config>) => {
+  config = { ...config, ...update }
+  localStorage.setItem(LOCAL_STORAGE_CONFIG_KEY, JSON.stringify(config))
 }
 
 const resetChallenge = () => {
@@ -272,12 +300,12 @@ class ChallengeCompleteAnimation {
   }
 }
 
-const isLastChallenge = () => {
-  if (challenge) {
-    return challenge.constructor === challenges[challenges.length - 1]
-  }
-  return false
-}
+// const isLastChallenge = () => {
+//   if (challenge) {
+//     return challenge.constructor === challenges[challenges.length - 1]
+//   }
+//   return false
+// }
 const setNextChallenge = () => {
   let nextChallengeClass
   if (challenge) {
@@ -295,16 +323,21 @@ const setNextChallenge = () => {
 }
 const setChallenge = (clazz?: typeof Challenge<IEnvironment>) => {
   if (!clazz) {
-    const name = localStorage.getItem(LOCAL_STORAGE_PROGRESS_KEY) as string
-    clazz = challenges.find(c => c.getName() === name)
+    clazz = challenges.find(c => c.getName() === config.challengeName)
     if (!clazz) {
       clazz = challenges[0]
     }
   }
 
+  if (challenge?.constructor === clazz) {
+    return
+  }
+
   challenge = new clazz()
-  localStorage.setItem(LOCAL_STORAGE_PROGRESS_KEY, clazz.getName())
   getRequiredElementById('challengeName').innerText = challenge.getLabel()
+  const select = getRequiredElementById('challengeSelect') as HTMLSelectElement
+  select.options.selectedIndex = challenges.findIndex(c => c === clazz)
+  saveConfig({ challengeName: clazz.getName() })
 
   editorView.dispatch({
     changes: {

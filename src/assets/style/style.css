@@ -13,15 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
   display: flex;
@@ -34,20 +25,6 @@ body {
   width: 100%;
   height: 100vh;
   display: flex;
-  /* margin: 0 auto; */
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 #codeEditor {
@@ -57,14 +34,13 @@ body {
   background-color: #ddd;
   overflow: auto;
   resize: horizontal;
-}
 
-#codeEditor > div {
-  height: 100%;
+  > div {
+    height: 100%;
+  }
 }
 
 #controls {
-  /* background-color: #031414; */
   background-color: #232424;
   display: flex;
   flex-direction: column;
@@ -73,6 +49,11 @@ body {
   padding: 10px;
   width: 250px;
   overflow-y: auto;
+
+  span {
+    font-size: 14px;
+    max-width: 250px;
+  }
 }
 
 #challengeHelp {
@@ -97,16 +78,12 @@ body {
 }
 #mouseIcon {
   padding: 12px 10px 0 0;
-}
-#mouseIcon svg {
-  height: 20px;
-  color: #ccc;
-  cursor: inherit;
-}
 
-#controls span {
-  font-size: 14px;
-  max-width: 250px;
+  svg {
+    height: 20px;
+    color: #ccc;
+    cursor: inherit;
+  }
 }
 
 #canvasContainer {
@@ -138,12 +115,13 @@ body {
   border-bottom: 1px solid #08f;
   pointer-events: visibleFill;
   transition: 0.25s;
-}
-#nextChallenge:hover {
-  cursor: pointer;
-  color: #6bf;
-  transition: 0.25s;
-  border-bottom-color: #6bf;
+
+  &:hover {
+    cursor: pointer;
+    color: #6bf;
+    transition: 0.25s;
+    border-bottom-color: #6bf;
+  }
 }
 #nextChallengeIcon svg {
   height: 26px;
@@ -163,30 +141,62 @@ body {
   color: #333d;
   opacity: 0;
   transition: 0.7s;
+
+  &:hover {
+    color: #333;
+    background-color: #fff;
+    transition: 0.25s;
+  }
 }
 
-#codeError:hover {
-  color: #333;
-  background-color: #fff;
+.fa {
+  height: 50px;
+  color: #08f;
   transition: 0.25s;
-}
 
-.fa.close {
-  position: absolute;
-  right: -13px;
-  top: -13px;
-  cursor: pointer;
-  transition: 0.7s;
-}
-.fa.close {
-  height: 25px;
-}
-.fa.close .fa-primary {
-  color: #fff;
-}
-.fa.close:hover .fa-secondary {
-  transition: 0.25s;
-  color: #6bf;
+  &:hover {
+    color: #6bf;
+    transition: 0.25s;
+    cursor: pointer;
+  }
+
+  &.disabled {
+    color: #444;
+    transition: 0.25s;
+    cursor: auto;
+  }
+
+  &.play {
+    height: 43.5px;
+    position: relative;
+    top: 3px;
+  }
+  &.info {
+    padding: 0 3px;
+    position: relative;
+    top: -1px;
+  }
+  &.grip-vertical {
+    cursor: ew-resize;
+  }
+
+  &.close {
+    position: absolute;
+    right: -13px;
+    top: -13px;
+    cursor: pointer;
+    transition: 0.7s;
+    height: 25px;
+
+    .fa-primary {
+      color: #fff;
+    }
+
+    &:hover .fa-secondary {
+      transition: 0.25s;
+      color: #6bf;
+    }
+  }
 }
 
 #codeErrorContent {
@@ -204,42 +214,10 @@ body {
   justify-content: left;
   padding-top: 3px;
   gap: 10px;
-}
 
-.fa {
-  height: 50px;
-  color: #08f;
-  transition: 0.25s;
-}
-
-.fa:hover {
-  color: #6bf;
-  transition: 0.25s;
-  cursor: pointer;
-}
-
-.fa.disabled {
-  color: #444;
-  transition: 0.25s;
-  cursor: auto;
-}
-
-.fa.play {
-  height: 43.5px;
-  position: relative;
-  top: 3px;
-}
-.fa.info {
-  padding: 0 3px;
-  position: relative;
-  top: -1px;
-}
-.fa.grip-vertical {
-  cursor: ew-resize;
-}
-
-#help .fa {
-  height: 18px;
+  .fa {
+    height: 18px;
+  }
 }
 
 .modalVeil {
@@ -278,54 +256,69 @@ body {
 #infoModalContent {
   color: #333;
   font-family: Helvetica;
+
+  dt {
+    font-weight: 600;
+  }
+  code {
+    background-color: #ccc;
+    padding: 2px 5px;
+    border-radius: 5px;
+
+    &.snippet {
+      display: block;
+      background-color: #333;
+      color: #eee;
+      padding: 10px;
+      width: fit-content;
+      border-radius: 5px;
+    }
+  }
+  table {
+    border-collapse: collapse;
+    background-color: #ddd;
+    border-radius: 5px;
+    margin: 5px 10px;
+  }
+  thead {
+    font-weight: 600;
+  }
+  td {
+    border: 1px solid #333;
+    padding: 2px 5px;
+    vertical-align: top;
+  }
+  p.highlight {
+    border: 1px solid #333;
+    background-color: #ff8;
+    padding: 10px 20px;
+    width: fit-content;
+  }
 }
 #infoLogo {
   text-align: center;
 }
-#infoModalContent dt {
-  font-weight: 600;
-}
-#infoModalContent code {
-  background-color: #ccc;
-  padding: 2px 5px;
-  border-radius: 5px;
-}
-#infoModalContent code.snippet {
-  display: block;
-  background-color: #333;
-  color: #eee;
-  padding: 10px;
-  width: fit-content;
-  border-radius: 5px;
-}
-#infoModalContent table {
-  border-collapse: collapse;
-  background-color: #ddd;
-  border-radius: 5px;
-  margin: 5px 10px;
-}
-#infoModalContent thead {
-  font-weight: 600;
-}
-#infoModalContent td {
-  border: 1px solid #333;
-  padding: 2px 5px;
-  vertical-align: top;
-}
-#infoModalContent p.highlight {
-  border: 1px solid #333;
-  background-color: #ff8;
-  padding: 10px 20px;
-  width: fit-content;
-}
 
 #configModal {
-  width: 500px;
+  width: fit-content;
   background-color: #333;
   height: auto;
+
+  h1 {
+    margin: 0 0 10px;
+    font-size: 24px;
+  }
 }
 
 footer {
   font-size: smaller;
   font-style: italic;
+}
+
+.configInput {
+  padding-bottom: 10px;
+}
+
+select {
+  padding: 5px 10px 5px 3px;
 }
