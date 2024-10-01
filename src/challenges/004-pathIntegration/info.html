@@ -1,0 +1,74 @@
+<h1>Challenge: <i>Path Integration</i></h1>
+<p>
+  Path integration is a mechanism that nesting animals can use to find their way back. It consists of maintaining a
+  vector (i.e. the angle and distance) back to where they started. This challenge provides you with a path integration
+  class, but you can write your own.
+</p>
+<!-- <p class="highlight">
+  TIP: Your script can include the <code>debugger</code> keyword, which can be handy, but it can also be a nuisance
+  because you can't edit your script while the debugger is active. If you find yourself stuck, close the devtools
+  windown, edit your code to remove these statements as necessary (and maybe refresh the page), and then reopen
+  devtools. A reasonable approach is to use <code>debugger</code> in a constructor or similar run-once-ish block, and
+  then set breakpoints in the devtools, which you can then remove without having to close the tools.
+</p> -->
+<h2>Sensors</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Type</td>
+    <td>Description</td>
+  </thead>
+  <tr>
+    <td>prevVelocityAchieved</td>
+    <td>Vec2</td>
+    <td>
+      The x/y translational change WRT the agent's center that was achieved in the last step. Note that the agent can
+      request any speed, turn, or sidle it wants, but what actually is achieved is subject to things like physiological
+      constraints, fatigue, illness, obstacles, or terrain. Also, the values have been rounded to 2 decimal places,
+      since no sensor values should ever be considered exact.
+    </td>
+  </tr>
+  <tr>
+    <td>prevAngularVelocityAchieved</td>
+    <td>number</td>
+    <td>
+      The actual amount of orientation change made in the previous step. The value has been rounded to 2 decimal places,
+      since no sensor values should ever be considered exact.
+    </td>
+  </tr>
+  <tr>
+    <td>contact</td>
+    <td>boolean</td>
+    <td>Whether a contact was made with another object.</td>
+  </tr>
+</table>
+
+<h2>Actuators</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+    <td>Range</td>
+  </thead>
+  <tr>
+    <td>speed</td>
+    <td>How fast the agent moves forward or backward.</td>
+    <td>-0.5 ... 2</td>
+  </tr>
+  <tr>
+    <td>turn</td>
+    <td>Rate of turning.</td>
+    <td>-&#x03C0;/12 ... &#x03C0;/12</td>
+  </tr>
+  <tr>
+    <td>sidle</td>
+    <td>How fast the agent moves side to side.</td>
+    <td>-0.4 ... 0.4</td>
+  </tr>
+</table>
+
+<h2>Goal</h2>
+<p>
+  The goal is to set out from the center, make contact with another object, and then return to the start. Other objects
+  will appear at a given range of distance from the starting point at random angles.
+</p>

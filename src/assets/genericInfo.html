@@ -144,7 +144,13 @@
   <br /><br />
   <code class="snippet">
     formatTime(time: number)<br />
+    minimizeAngle(a: number) // reduces a given angle to the range -Math.PI to Math.PI<br />
+    rotate(vector: Vec2, angle: number, mutate = false) // Rotates the given vector by the given angle, returing a new
+    Vec2 object if mutate is false<br />
     shorten(n: number) // Removes excess decimals from the given number, preserving precision<br />
+    Vec2 // An object with attributes x and y, with methods defined
+    <a target="_blank" href="https://github.com/piqnt/planck.js/blob/master/src/common/Vec2.ts">here</a><br />
+    vectorAngle(v: Vec2) // Returns the angle of the given vector WRT (0,0)<br />
   </code>
 </p>
 

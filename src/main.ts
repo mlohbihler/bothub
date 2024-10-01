@@ -15,10 +15,12 @@ import InfoModal from './infoModal'
 import ConfigModal from './configModal'
 import gid from './gid'
 import { IEnvironment } from './@types'
+import mixpanel from 'mixpanel-browser'
 
 import Forward from './challenges/001-forward'
 import Turn from './challenges/002-turn'
 import Gradient from './challenges/003-gradient'
+import PathIntegration from './challenges/004-pathIntegration'
 
 // @ts-ignore
 import PlayButton from './assets/svg/fa-play.svg?raw'
@@ -40,6 +42,7 @@ import NextButton from './assets/svg/fa-forward-fast.svg?raw'
 // TODO: don't allow changing challenge to beyond what has already been completed until the basics are done.
 
 interface Config {
+  guid?: string
   challengeName?: string
   showMousePosition: boolean
   indentOnTab: boolean
@@ -47,6 +50,14 @@ interface Config {
 const defaultConfig: Config = {
   showMousePosition: false,
   indentOnTab: true,
+}
+
+type EventName = 'Page Load' | 'Challenge Load' | 'Challenge Save' | 'Challenge Completion'
+interface EventOptions {
+  viewPortHeight?: number
+  viewPortWidth?: number
+  challengeName?: string
+  error?: boolean
 }
 
 const STEP_TIME = 1 / FPS
@@ -74,11 +85,23 @@ window.onload = () => {
   initButtons()
   initConfig()
   mouseListeners(canvas)
+  initMP()
+
   setChallenge()
 }
 
+const initMP = () => {
+  mixpanel.init(import.meta.env.VITE_MP_TK, { persistence: 'localStorage' })
+  mixpanel.identify(config.guid)
+  track('Page Load', { viewPortWidth: window.visualViewport?.width, viewPortHeight: window.visualViewport?.height })
+}
+
+const track = (eventName: EventName, opts: EventOptions = {}) => {
+  mixpanel.track(eventName, { mode: import.meta.env.MODE, ...opts })
+}
+
 const initChallenges = () => {
-  challenges = [Forward, Turn, Gradient]
+  challenges = [Forward, Turn, Gradient, PathIntegration]
 }
 
 // @ts-ignore
@@ -117,13 +140,16 @@ const initEditor = () => {
 const updateScript = () => {
   const script = editorView.state.doc.toString()
 
+  let error = false
   try {
     // Tell the challenge about the new code.
     challenge.saveScript(script)
     errorMessage.hide()
   } catch (e) {
     errorMessage.show(e)
+    error = true
   }
+  track('Challenge Save', { challengeName: challenge.getName(), error })
 
   // Save the code in local memory.
   // TODO: handle scripts that are too large for local?
@@ -173,6 +199,7 @@ const initButtons = () => {
 
 const initConfig = () => {
   config = { ...defaultConfig, ...JSON.parse(localStorage.getItem(LOCAL_STORAGE_CONFIG_KEY) || '{}') }
+  if (!config.guid) saveConfig({ guid: crypto.randomUUID() })
 
   const mousePosition = getRequiredElementById('mousePositionsContainer')
   mousePosition.style.display = config.showMousePosition ? '' : 'none'
@@ -279,6 +306,7 @@ let challengeCompleteAnimation: ChallengeCompleteAnimation | undefined
 const challengeComplete = () => {
   if (!challengeCompleteAnimation) {
     challengeCompleteAnimation = new ChallengeCompleteAnimation()
+    track('Challenge Completion', { challengeName: challenge.getName() })
   }
 }
 
@@ -390,4 +418,5 @@ const setChallenge = (clazz?: typeof Challenge<IEnvironment>) => {
     challengeComplete,
   )
   toggleRunner()
+  track('Challenge Load', { challengeName: challenge.getName() })
 }

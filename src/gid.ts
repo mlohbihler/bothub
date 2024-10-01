@@ -1,8 +1,14 @@
-import { shorten } from './util'
+import { Vec2 } from 'planck'
+import { minimizeAngle, shorten } from './util'
+import { rotate, vectorAngle } from './planck/boxUtil'
 
 export default {
-  shorten,
   formatTime,
+  minimizeAngle,
+  rotate,
+  shorten,
+  Vec2,
+  vectorAngle,
 }
 
 function formatTime(time: number) {

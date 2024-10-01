@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td>prevVelocityAchieved</td>
-    <td>Vector</td>
+    <td>Vec2</td>
     <td>
       The x/y translational change WRT the agent's nose that was achieved in the last turn. The agent can attempt
       movement, but may be blocked by an obstacle or restricted by terrain.
