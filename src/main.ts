@@ -1,11 +1,10 @@
 import { createElement, getContext, getRequiredElementById } from './util'
 import Renderer from './planck/renderer'
 import { FPS } from './planck/boxUtil'
-import Forward from './challenges/001-forward'
-import Turn from './challenges/002-turn'
 import { basicSetup } from 'codemirror'
 import { javascript, esLint } from '@codemirror/lang-javascript'
 import { linter, lintGutter } from '@codemirror/lint'
+import { indentLess, indentMore } from '@codemirror/commands'
 import { Prec } from '@codemirror/state'
 import { EditorView, keymap } from '@codemirror/view'
 import Runner from './runner'
@@ -16,6 +15,10 @@ import InfoModal from './infoModal'
 import ConfigModal from './configModal'
 import gid from './gid'
 import { IEnvironment } from './@types'
+
+import Forward from './challenges/001-forward'
+import Turn from './challenges/002-turn'
+import Gradient from './challenges/003-gradient'
 
 // @ts-ignore
 import PlayButton from './assets/svg/fa-play.svg?raw'
@@ -39,9 +42,11 @@ import NextButton from './assets/svg/fa-forward-fast.svg?raw'
 interface Config {
   challengeName?: string
   showMousePosition: boolean
+  indentOnTab: boolean
 }
 const defaultConfig: Config = {
   showMousePosition: false,
+  indentOnTab: true,
 }
 
 const STEP_TIME = 1 / FPS
@@ -73,7 +78,7 @@ window.onload = () => {
 }
 
 const initChallenges = () => {
-  challenges = [Forward, Turn]
+  challenges = [Forward, Turn, Gradient]
 }
 
 // @ts-ignore
@@ -86,7 +91,16 @@ const initEditor = () => {
     return true
   }
 
-  const keys = Prec.highest(keymap.of([{ key: 'Mod-s', run: saveAndRun }]))
+  const maybeIndentMore = (target: EditorView) => (config.indentOnTab ? indentMore(target) : false)
+  const maybeIndentLess = (target: EditorView) => (config.indentOnTab ? indentLess(target) : false)
+
+  const keys = Prec.highest(
+    keymap.of([
+      { key: 'Mod-s', run: saveAndRun },
+      { key: 'Tab', run: maybeIndentMore },
+      { key: 'Shift-Tab', run: maybeIndentLess },
+    ]),
+  )
   editorView = new EditorView({
     doc: `// Your code goes here`,
     extensions: [
@@ -162,10 +176,19 @@ const initConfig = () => {
 
   const mousePosition = getRequiredElementById('mousePositionsContainer')
   mousePosition.style.display = config.showMousePosition ? '' : 'none'
-  getRequiredElementById('mousePositionCheckbox').addEventListener('change', evt => {
+  const mousePositionCheckbox = getRequiredElementById('mousePositionCheckbox') as HTMLInputElement
+  mousePositionCheckbox.checked = config.showMousePosition
+  mousePositionCheckbox.addEventListener('change', evt => {
     const value = (evt.target as HTMLInputElement)?.checked
     mousePosition.style.display = value ? '' : 'none'
     saveConfig({ showMousePosition: value })
+  })
+
+  const indentOnTabCheckbox = getRequiredElementById('indentOnTabCheckbox') as HTMLInputElement
+  indentOnTabCheckbox.checked = config.indentOnTab
+  indentOnTabCheckbox.addEventListener('change', evt => {
+    const value = (evt.target as HTMLInputElement)?.checked
+    saveConfig({ indentOnTab: value })
   })
 
   const challengeSelect = getRequiredElementById('challengeSelect') as HTMLSelectElement
