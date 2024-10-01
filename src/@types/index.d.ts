@@ -11,6 +11,10 @@ declare global {
   interface Window {
     GID: any
   }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv
+  }
 }
 
 interface StepEvent {
