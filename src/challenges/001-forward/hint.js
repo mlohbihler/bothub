@@ -1,6 +1,6 @@
 // Welcome!!
 //
-// You'll want to read all of this...
+// It's a lot, i know, but you'll want to read all of this...
 //
 // This challenge is like a "hello world". All you have to do is
 // get the agent (the solid blue circle) into the target area
