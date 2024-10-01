@@ -36,7 +36,7 @@ export default class Environment implements IEnvironment {
         const amount = this.gradient.amountAt(x, y)
         if (amount > 0) {
           const hex = Math.ceil((amount / (this.gradient.pathLength() + 1)) * 255).toString(16)
-          h.dot(x + scale / 2, y + scale / 2, 4, `#0000ff${hex.padStart(2, '0')}`)
+          h.dot(x + scale / 2, y + scale / 2, 4, `#6666ff${hex.padStart(2, '0')}`)
         }
       }
     }
