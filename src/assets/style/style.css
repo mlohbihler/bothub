@@ -65,12 +65,17 @@ body {
   font-size: 24px;
 }
 
-#debugProps,
-#mousePositions {
+#debugProps {
   display: flex;
   flex-direction: column;
   max-width: 250px;
   min-width: 250px;
+}
+#mousePositions {
+  display: flex;
+  flex-direction: column;
+  max-width: 235px;
+  min-width: 235px;
 }
 #mousePositionsContainer {
   display: flex;
@@ -140,13 +145,17 @@ body {
   min-width: 300px;
   color: #333d;
   opacity: 0;
-  transition: 0.7s;
+  transition: 0.4s;
 
   &:hover {
     color: #333;
     background-color: #fff;
     transition: 0.25s;
   }
+}
+#codeErrorContent {
+  font-family: monospace;
+  white-space: pre;
 }
 
 .fa {
@@ -197,11 +206,6 @@ body {
       color: #6bf;
     }
   }
-}
-
-#codeErrorContent {
-  font-family: monospace;
-  white-space: pre;
 }
 
 #buttons,

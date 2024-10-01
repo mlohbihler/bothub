@@ -32,7 +32,7 @@ export default class ErrorMessage {
 
     this.containerElement.style.backgroundColor = '#f88f'
     this.timeout = setTimeout(() => {
-      this.containerElement.style.backgroundColor = '#fff4'
+      this.containerElement.style.backgroundColor = ''
     }, 1000)
   }
 
