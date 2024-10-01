@@ -1,0 +1,60 @@
+<h1>Challenge: <i>Gradient</i></h1>
+<p>
+  In this challenge you need to follow a gradient trail. There are targes along the way, each of which needs to be
+  touched.
+</p>
+<p>
+  This challenge is a little complex, but it is pretty satisfying to watch it working. In the default code there is
+  solution marked as a spoiler.
+</p>
+<p class="highlight">
+  TIP: Your script can include the <code>debugger</code> keyword, which can be handy, but it can also be a nuisance
+  because you can't edit your script while the debugger is active. If you find yourself stuck, close the devtools
+  windown, edit your code to remove these statements as necessary (and maybe refresh the page), and then reopen
+  devtools. A reasonable approach is to use <code>debugger</code> in a constructor or similar run-once-ish block, and
+  then set breakpoints in the devtools, which you can then remove without having to close the tools.
+</p>
+<h2>Sensors</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+  </thead>
+  <tr>
+    <td>amount</td>
+    <td>
+      The amount of the gradient that is currently being sensed at the nose of the agent. As the agent turns - without
+      any translational movement - this amount can change.
+    </td>
+  </tr>
+</table>
+
+<h2>Actuators</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+    <td>Range</td>
+  </thead>
+  <tr>
+    <td>speed</td>
+    <td>How fast the agent moves forward or backward.</td>
+    <td>-0.5 ... 4</td>
+  </tr>
+  <tr>
+    <td>turn</td>
+    <td>Rate of turning.</td>
+    <td>-&#x03C0;/12 ... &#x03C0;/12</td>
+  </tr>
+  <tr>
+    <td>sidle</td>
+    <td>How fast the agent moves side to side.</td>
+    <td>-0.4 ... 0.4</td>
+  </tr>
+</table>
+
+<h2>Goal</h2>
+<p>
+  Move the agent along the gradient path, touching each of the targets along the way in the order given by the gradient
+  amount.
+</p>

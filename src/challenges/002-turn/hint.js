@@ -6,19 +6,19 @@
 // using state is a more generalizable solution.
 // let state = 'turn'
 // let count = 0
-// const step = (evt, sensors, actuators) => {
-//   if (state === 'turn') {
-//     actuators.turn = 0.3
-//     count++
-//     if (count > 3) {
-//       state = 'move'
-//     }
-//   } else {
-//     actuators.speed = 0.5
-//   }
-
-//   evt.debugProps.Count = count
-// }
+const step = (evt, sensors, actuators) => {
+  // if (state === 'turn') {
+  //   actuators.turn = 0.3
+  //   count++
+  //   if (count > 3) {
+  //     state = 'move'
+  //   }
+  // } else {
+  //   actuators.speed = 0.5
+  // }
+  //
+  // evt.debugProps.Count = count
+}
 
 // Turn and move
 // const step = (evt, sensors, actuators) => {

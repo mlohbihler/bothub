@@ -204,3 +204,13 @@ export const clamp = (num: number, min: number, max: number): number => {
     return num
   }
 }
+
+export const minmax = (arr: number[]) =>
+  arr.reduce(
+    (minmax, current) => {
+      if (minmax[0] > current) minmax[0] = current
+      if (minmax[1] < current) minmax[1] = current
+      return minmax
+    },
+    [Infinity, -Infinity] as [number, number],
+  )
