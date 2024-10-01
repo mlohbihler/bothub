@@ -53,6 +53,9 @@ body {
   span {
     font-size: 14px;
     max-width: 250px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
 }
 
