@@ -88,9 +88,11 @@ const moves = [
   'r',
   'rd',
   'r',
-  'r',
-  'r',
-  'ur g',
+  'dr',
+  'ur',
+  'ur',
+  'u',
+  'ul g',
 ]
 
 const updateCoordinates = (coords: [number, number], move: string) => {
