@@ -1,0 +1,51 @@
+<h1>Challenge: <i>Gradient 2</i></h1>
+<p>
+  This challenge is similar to the original Gradient, but now is it possible for the agent to be completely within an
+  area where the gradient amount does not change. As such, the solution for Gradient will not work. Instead, what is
+  likely needed is some manner of memory of the likley general direction of the gradient.
+</p>
+<p>This time, no spoiler is provided. Good luck!</p>
+<h2>Sensors</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+  </thead>
+  <tr>
+    <td>amount</td>
+    <td>
+      The amount of the gradient that is currently being sensed at the nose of the agent. As the agent turns - without
+      any translational movement - this amount can change.
+    </td>
+  </tr>
+</table>
+
+<h2>Actuators</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+    <td>Range</td>
+  </thead>
+  <tr>
+    <td>speed</td>
+    <td>How fast the agent moves forward or backward.</td>
+    <td>-0.5 ... 4</td>
+  </tr>
+  <tr>
+    <td>turn</td>
+    <td>Rate of turning.</td>
+    <td>-&#x03C0;/12 ... &#x03C0;/12</td>
+  </tr>
+  <tr>
+    <td>sidle</td>
+    <td>How fast the agent moves side to side.</td>
+    <td>-0.4 ... 0.4</td>
+  </tr>
+</table>
+
+<h2>Goal</h2>
+<p>
+  Move the agent along the gradient path, touching each of the targets along the way in the order given by the gradient
+  amount.
+</p>

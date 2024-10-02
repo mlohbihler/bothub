@@ -21,6 +21,7 @@ import Forward from './challenges/001-forward'
 import Turn from './challenges/002-turn'
 import Gradient from './challenges/003-gradient'
 import PathIntegration from './challenges/004-pathIntegration'
+import Gradient2 from './challenges/005-gradient2'
 
 // @ts-ignore
 import PlayButton from './assets/svg/fa-play.svg?raw'
@@ -90,6 +91,9 @@ window.onload = () => {
   setChallenge()
 }
 
+// TODO
+// window.onerror = evt => {}
+
 const initMP = () => {
   mixpanel.init(import.meta.env.VITE_MP_TK, { persistence: 'localStorage' })
   mixpanel.identify(config.guid)
@@ -101,7 +105,7 @@ const track = (eventName: EventName, opts: EventOptions = {}) => {
 }
 
 const initChallenges = () => {
-  challenges = [Forward, Turn, Gradient, PathIntegration]
+  challenges = [Forward, Turn, Gradient, PathIntegration, Gradient2]
 }
 
 // @ts-ignore
