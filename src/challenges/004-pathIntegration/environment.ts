@@ -67,6 +67,7 @@ class Goal implements Steppable {
   contactMade = false
   targetDisableRadius: number | undefined
 
+  showGoal = true
   goalEnableFillOpacity = new Transition(0, 16, 2 * FPS)
   goalEnableStrokeOpacity = new Transition(0, 128, 2 * FPS)
   goalDisableRadius: number | undefined
@@ -74,6 +75,9 @@ class Goal implements Steppable {
   step(evt: StepEvent) {
     if (this.agent.bug.getContactList() !== null) {
       this.contactMade = true
+      if (this.goalDisabled) {
+        this.showGoal = false
+      }
     }
     this.timestamp = evt.timestamp
 
@@ -109,7 +113,7 @@ class Goal implements Steppable {
       })
     }
 
-    if (this.contactMade) {
+    if (this.contactMade && this.showGoal) {
       let goalRadius = Math.sin(this.timestamp * 3) * 4 + 30
       if (this.goalDisabled) {
         if (this.goalDisableRadius === undefined) {
