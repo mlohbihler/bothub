@@ -96,7 +96,7 @@ window.onload = () => {
 // window.onerror = evt => {}
 
 const initMP = () => {
-  mixpanel.init(import.meta.env.VITE_MP_TK, { persistence: 'localStorage' })
+  mixpanel.init(import.meta.env.VITE_MP_TK, { debug: true, persistence: 'localStorage' })
   mixpanel.identify(config.guid)
   track('Page Load', { viewPortWidth: window.visualViewport?.width, viewPortHeight: window.visualViewport?.height })
 }
