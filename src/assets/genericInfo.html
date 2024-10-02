@@ -170,6 +170,16 @@
   local storage, profiling, and other rather useful stuff.
 </p>
 
+<p>
+  This app tracks usage anonymously. There are four events: app load, challenge load, challenge save, and challenge
+  completion. This help us figure out a few things: whether people who visit the site try it out, what challenges get
+  tried and completed (and by extension which may be too difficult)... stuff like that. Users are tracked with an id
+  that we generate, and so all we know is, e.g. "user XYZ tried 3 challenges and completed 2 of them". And by "XYZ", we
+  mean something like "f564bbd8-a9bd-4571-b57f-0c1a15270ae3". And that's all we know. No names or emails or anything
+  else. If you delete the local storage and start again to us you look like a completely new user. Hope this is cool
+  with everyone.
+</p>
+
 <!--
 <h2>Even More Boring... Philosohy</h2>
 <p>
