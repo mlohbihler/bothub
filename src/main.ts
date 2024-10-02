@@ -108,8 +108,8 @@ const initChallenges = () => {
   challenges = [Forward, Turn, Gradient, PathIntegration, Gradient2]
 }
 
-// @ts-ignore
-const localStorageName = (challenge: Challenge) => `gid-script-${challenge.constructor.getName()}`
+const localStorageName = (challenge: Challenge<IEnvironment>) =>
+  `gid-script-${(challenge.constructor as typeof Challenge).getName()}`
 
 const initEditor = () => {
   const saveAndRun = () => {
