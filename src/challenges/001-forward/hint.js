@@ -2,7 +2,7 @@
 //
 // It's a lot, i know, but you'll want to read all of this...
 //
-// Use ctrl+s or &#x2318;+s to save changes to this script.
+// Use Ctrl+S or ⌘S to save changes to this script.
 // To use tab to indent, check out the config options under TODO
 //
 // This challenge is like a "hello world". All you have to do is
