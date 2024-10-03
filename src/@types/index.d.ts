@@ -13,7 +13,10 @@ declare global {
   }
 
   interface ImportMeta {
-    readonly env: ImportMetaEnv
+    readonly env: {
+      MODE: 'development' | 'production'
+      VITE_MP_TK: string
+    }
   }
 }
 

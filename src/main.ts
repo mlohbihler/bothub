@@ -5,7 +5,6 @@ import { indentLess, indentMore } from '@codemirror/commands'
 import { Prec } from '@codemirror/state'
 import { EditorView, keymap } from '@codemirror/view'
 import * as eslint from 'eslint-linter-browserify'
-import mixpanel from 'mixpanel-browser'
 
 import { createElement, getContext, getRequiredElementById } from './util'
 import Renderer from './planck/renderer'
@@ -17,6 +16,7 @@ import InfoModal from './infoModal'
 import ConfigModal from './configModal'
 import gid from './gid'
 import { IEnvironment } from './@types'
+import Mixpanel from './util/mixpanel'
 
 import Forward from './challenges/001-forward'
 import Turn from './challenges/002-turn'
@@ -54,14 +54,6 @@ const defaultConfig: Config = {
   indentOnTab: true,
 }
 
-type EventName = 'Page Load' | 'Challenge Load' | 'Challenge Save' | 'Challenge Completion'
-interface EventOptions {
-  viewPortHeight?: number
-  viewPortWidth?: number
-  challengeName?: string
-  error?: boolean
-}
-
 const STEP_TIME = 1 / FPS
 const LOCAL_STORAGE_CONFIG_KEY = 'gid-config'
 
@@ -74,6 +66,7 @@ let configModal: ConfigModal
 let challenge: Challenge<IEnvironment>
 let runner: Runner
 let renderer: Renderer
+let mp: Mixpanel
 
 window.onerror = evt => {
   alert(`Hmm, there was a problem loading the app:\n\n    ${evt}\n\nThe app will probably not work properly.`)
@@ -91,19 +84,9 @@ window.onload = () => {
   initButtons()
   initConfig()
   mouseListeners(canvas)
-  initMP()
+  mp = new Mixpanel(config.guid || '')
 
   setChallenge()
-}
-
-const initMP = () => {
-  mixpanel.init(import.meta.env.VITE_MP_TK, { debug: true, persistence: 'localStorage' })
-  mixpanel.identify(config.guid)
-  track('Page Load', { viewPortWidth: window.visualViewport?.width, viewPortHeight: window.visualViewport?.height })
-}
-
-const track = (eventName: EventName, opts: EventOptions = {}) => {
-  mixpanel.track(eventName, { mode: import.meta.env.MODE, ...opts })
 }
 
 const initChallenges = () => {
@@ -157,7 +140,7 @@ const updateScript = () => {
     errorMessage.show(e)
     error = true
   }
-  track('Challenge Save', { challengeName: challenge.getName(), error })
+  mp.track('Challenge Save', { challengeName: challenge.getName(), error })
 
   // Save the code in local memory.
   // TODO: handle scripts that are too large for local?
@@ -325,7 +308,7 @@ let challengeCompleteAnimation: ChallengeCompleteAnimation | undefined
 const challengeComplete = () => {
   if (!challengeCompleteAnimation) {
     challengeCompleteAnimation = new ChallengeCompleteAnimation()
-    track('Challenge Completion', { challengeName: challenge.getName() })
+    mp.track('Challenge Completion', { challengeName: challenge.getName() })
   }
 }
 
@@ -437,5 +420,5 @@ const setChallenge = (clazz?: typeof Challenge<IEnvironment>) => {
     challengeComplete,
   )
   toggleRunner()
-  track('Challenge Load', { challengeName: challenge.getName() })
+  mp.track('Challenge Load', { challengeName: challenge.getName() })
 }
