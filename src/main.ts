@@ -75,6 +75,10 @@ let challenge: Challenge<IEnvironment>
 let runner: Runner
 let renderer: Renderer
 
+window.onerror = evt => {
+  alert(`Hmm, there was a problem loading the app:\n\n    ${evt}\n\nThe app will probably not work properly.`)
+}
+
 window.onload = () => {
   window.GID = gid
 
@@ -91,9 +95,6 @@ window.onload = () => {
 
   setChallenge()
 }
-
-// TODO
-// window.onerror = evt => {}
 
 const initMP = () => {
   mixpanel.init(import.meta.env.VITE_MP_TK, { debug: true, persistence: 'localStorage' })
@@ -190,7 +191,6 @@ const initButtons = () => {
   createElement(buttons, PauseButton, { id: 'pauseButton' }).addEventListener('click', toggleRunner)
   createElement(buttons, PlayButton, { id: 'playButton' }).addEventListener('click', toggleRunner)
   createElement(buttons, ForwardStepButton, { id: 'stepButton' }).addEventListener('click', tick)
-  fixButtons()
 
   createElement(getRequiredElementById('mouseIcon'), MouseIcon)
 
@@ -200,8 +200,16 @@ const initButtons = () => {
     infoModal.showChallenge(challenge),
   )
 
+  createElement(getRequiredElementById('retryChallengeIcon'), BackwardButton)
+  getRequiredElementById('retryChallenge').addEventListener('click', resetChallenge)
+
   createElement(getRequiredElementById('nextChallengeIcon'), NextButton)
   getRequiredElementById('nextChallenge').addEventListener('click', setNextChallenge)
+
+  createElement(getRequiredElementById('canvasStartButton'), PlayButton, { id: 'canvasPlayButton' })
+  getRequiredElementById('canvasPlayButton').addEventListener('click', toggleRunner)
+
+  fixButtons()
 }
 
 const initConfig = () => {
@@ -301,10 +309,12 @@ const fixButtons = () => {
   if (runner?.running()) {
     getRequiredElementById('pauseButton').style.display = ''
     getRequiredElementById('playButton').style.display = 'none'
+    getRequiredElementById('canvasPlayButton').style.display = 'none'
     getRequiredElementById('stepButton').classList.add('disabled')
   } else {
     getRequiredElementById('pauseButton').style.display = 'none'
     getRequiredElementById('playButton').style.display = ''
+    getRequiredElementById('canvasPlayButton').style.display = ''
     getRequiredElementById('stepButton').classList.remove('disabled')
   }
 }

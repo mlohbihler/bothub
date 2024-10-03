@@ -28,10 +28,14 @@
         <div id="debugProps"></div>
       </div>
       <div id="canvasContainer" tabindex="0">
+        <div id="canvasStartButton"></div>
         <div id="canvasVeil">
           <div id="canvasVeilContent">
             <div>Completed!</div>
-            <div id="nextChallenge">Next <span id="nextChallengeIcon"></span></div>
+            <div class="challengeNav">
+              <div id="retryChallenge"><span id="retryChallengeIcon"></span> Retry</div>
+              <div id="nextChallenge">Next <span id="nextChallengeIcon"></span></div>
+            </div>
           </div>
         </div>
         <canvas id="canvas" width="1" height="1"></canvas>
@@ -45,7 +49,7 @@
       <div id="infoModal" class="modal">
         <div class="modalScroller">
           <div id="infoModalClose"></div>
-          <div id="infoModalContent">This is where the content goes</div>
+          <div id="infoModalContent"></div>
           <div id="infoLogo"><img src="src/assets/images/logo_lg_transparent.png" /></div>
         </div>
       </div>

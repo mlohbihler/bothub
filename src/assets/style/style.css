@@ -11,6 +11,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --button-blue: #08f;
+  --button-blue-hover: #6bf;
 }
 
 body {
@@ -101,42 +104,69 @@ body {
   overflow: hidden; /* keeps a scrollbar from appearing due to canvas resize */
   outline: none;
   position: relative;
-}
-#canvasVeil {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  opacity: 0;
-  pointer-events: none;
-  color: #08f;
-  font-size: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 400;
-}
-#nextChallenge {
-  float: right;
-  font-size: 36px;
-  width: fit-content;
-  border-bottom: 1px solid #08f;
-  pointer-events: visibleFill;
-  transition: 0.25s;
 
-  &:hover {
-    cursor: pointer;
-    color: #6bf;
-    transition: 0.25s;
-    border-bottom-color: #6bf;
+  #canvasVeil {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0;
+    pointer-events: none;
+    color: var(--button-blue);
+    font-size: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+
+    .challengeNav {
+      display: flex;
+      justify-content: space-between;
+      font-size: 36px;
+
+      div {
+        border-bottom: 1px solid var(--button-blue);
+        pointer-events: visibleFill;
+        transition: 0.25s;
+
+        &:hover {
+          cursor: pointer;
+          color: var(--button-blue-hover);
+          transition: 0.25s;
+          border-bottom-color: var(--button-blue-hover);
+        }
+      }
+    }
+    svg {
+      height: 26px;
+      color: inherit;
+      transition: inherit;
+    }
+  }
+
+  #canvasStartButton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      height: 128px;
+      background-color: #23242488;
+      border: 1px solid #08f8;
+      padding: 10px 30px;
+      border-radius: 20px;
+
+      &:hover {
+        border: 1px solid var(--button-blue-hover);
+      }
+    }
   }
 }
-#nextChallengeIcon svg {
-  height: 26px;
-  color: inherit;
-  transition: inherit;
-}
-
 #codeError {
   position: absolute;
   left: 20px;
@@ -163,11 +193,11 @@ body {
 
 .fa {
   height: 50px;
-  color: #08f;
+  color: var(--button-blue);
   transition: 0.25s;
 
   &:hover {
-    color: #6bf;
+    color: var(--button-blue-hover);
     transition: 0.25s;
     cursor: pointer;
   }
@@ -206,7 +236,7 @@ body {
 
     &:hover .fa-secondary {
       transition: 0.25s;
-      color: #6bf;
+      color: var(--button-blue-hover);
     }
   }
 }
