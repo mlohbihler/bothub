@@ -2,6 +2,9 @@
 //
 // It's a lot, i know, but you'll want to read all of this...
 //
+// Use ctrl+s or &#x2318;+s to save changes to this script.
+// To use tab to indent, check out the config options under TODO
+//
 // This challenge is like a "hello world". All you have to do is
 // get the agent (the solid blue circle) into the target area
 // (the yellow circle). This will help you learn how all this

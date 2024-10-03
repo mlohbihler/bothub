@@ -113,8 +113,9 @@ const localStorageName = (challenge: Challenge<IEnvironment>) =>
   `gid-script-${(challenge.constructor as typeof Challenge).getName()}`
 
 const initEditor = () => {
-  const saveAndRun = () => {
+  const saveAndRun = (reset: boolean) => {
     updateScript()
+    if (reset) resetChallenge()
     // Always return true so that the browser save dialog is not raised.
     return true
   }
@@ -124,7 +125,8 @@ const initEditor = () => {
 
   const keys = Prec.highest(
     keymap.of([
-      { key: 'Mod-s', run: saveAndRun },
+      { key: 'Mod-s', run: () => saveAndRun(true) },
+      { key: 'Shift-Mod-s', run: () => saveAndRun(false) },
       { key: 'Tab', run: maybeIndentMore },
       { key: 'Shift-Tab', run: maybeIndentLess },
     ]),
