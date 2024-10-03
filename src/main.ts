@@ -283,6 +283,8 @@ const mouseListeners = (canvas: HTMLCanvasElement) => {
       runner.render()
     }
   })
+
+  canvas.addEventListener('dblclick', () => renderer.recenter())
 }
 
 const keyboardListeners = (canvas: HTMLElement) => {
