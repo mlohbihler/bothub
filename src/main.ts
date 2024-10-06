@@ -68,8 +68,11 @@ let runner: Runner
 let renderer: Renderer
 let mp: Mixpanel
 
+const ignoredErrors = ['ResizeObserver loop completed with undelivered notifications.']
 window.onerror = evt => {
+  if (typeof evt === 'string' && ignoredErrors.includes(evt)) return
   alert(`Hmm, there was a problem loading the app:\n\n    ${evt}\n\nThe app will probably not work properly.`)
+  console.log(evt)
 }
 
 window.onload = () => {
