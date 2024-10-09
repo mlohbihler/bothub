@@ -15,6 +15,7 @@ import {
 } from 'planck'
 import { getContext, isNil } from '../util'
 import { forEachNextable } from './boxUtil'
+import Rectangle from './rectangle'
 
 export interface RendererOptions {
   scaleFactor: number
@@ -113,6 +114,15 @@ export default class Renderer {
 
   worldToCanvas(x: number, y: number) {
     return Vec2(x * this.scaleFactor, y * this.scaleFactor)
+  }
+
+  getWorldViewport() {
+    return new Rectangle(
+      -this.offset.x / this.scaleFactor,
+      (this.offset.y - this.cx.canvas.height) / this.scaleFactor,
+      this.cx.canvas.width / this.scaleFactor,
+      this.cx.canvas.height / this.scaleFactor,
+    )
   }
 
   inWorldCanvas(fn: (cx: CanvasRenderingContext2D) => void, zoom = true) {

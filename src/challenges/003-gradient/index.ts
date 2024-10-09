@@ -2,6 +2,7 @@ import { Vec2 } from 'planck'
 import { RendererOptions } from '../../planck/renderer'
 import Challenge from '../challenge'
 import Environment from './environment'
+import Rectangle from '../../planck/rectangle'
 
 // @ts-ignore
 import hint from './hint.js?raw'
@@ -39,8 +40,8 @@ export default class Gradient extends Challenge<Environment> {
     return undefined
   }
 
-  render(cx: CanvasRenderingContext2D) {
-    this.getEnvironment().render(cx)
+  render(cx: CanvasRenderingContext2D, viewport: Rectangle) {
+    this.getEnvironment().render(cx, viewport)
   }
 
   isComplete() {

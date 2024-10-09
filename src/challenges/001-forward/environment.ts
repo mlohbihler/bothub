@@ -2,6 +2,8 @@ import { Vec2, World } from 'planck'
 import Physiology, { radius } from './physiology'
 import { IEnvironment, StepEvent, Steppable } from '../../@types'
 import Controller from '../controller'
+import Rectangle from '../../planck/rectangle'
+import { drawOffscreenDirection } from '../offscreenDirection'
 
 export default class Environment implements IEnvironment {
   updatables: Steppable[] = []
@@ -23,8 +25,9 @@ export default class Environment implements IEnvironment {
     this.updatables.forEach(e => e.step(evt))
   }
 
-  render(cx: CanvasRenderingContext2D) {
+  render(cx: CanvasRenderingContext2D, viewport: Rectangle) {
     this.goal.render(cx)
+    drawOffscreenDirection(cx, this.#agent.bug.getPosition(), viewport)
   }
 
   isComplete() {

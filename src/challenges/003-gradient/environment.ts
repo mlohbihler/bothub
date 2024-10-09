@@ -4,6 +4,8 @@ import { IEnvironment, StepEvent, Steppable } from '../../@types'
 import Controller from '../controller'
 import { DebugHelper } from '../../util'
 import Gradient from './gradient'
+import Rectangle from '../../planck/rectangle'
+import { drawOffscreenDirection } from '../offscreenDirection'
 
 export default class Environment implements IEnvironment {
   updatables: Steppable[] = []
@@ -27,7 +29,7 @@ export default class Environment implements IEnvironment {
     this.updatables.forEach(e => e.step(evt))
   }
 
-  render(cx: CanvasRenderingContext2D) {
+  render(cx: CanvasRenderingContext2D, viewport: Rectangle) {
     const h = new DebugHelper(cx)
     const range = this.gradient.range()
     const scale = this.gradient.scale
@@ -42,6 +44,7 @@ export default class Environment implements IEnvironment {
     }
 
     this.goal.render(cx)
+    drawOffscreenDirection(cx, this.#agent.bug.getPosition(), viewport)
   }
 
   isComplete() {

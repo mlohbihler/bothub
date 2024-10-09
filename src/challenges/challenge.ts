@@ -1,6 +1,7 @@
 import { Vec2, World } from 'planck'
 import { IEnvironment, SetupOptions } from '../@types'
 import Controller from './controller'
+import Rectangle from '../planck/rectangle'
 
 export default class Challenge<E extends IEnvironment> {
   static getName(): string {
@@ -86,7 +87,7 @@ export default class Challenge<E extends IEnvironment> {
     return undefined
   }
 
-  render(_cx: CanvasRenderingContext2D) {}
+  render(_cx: CanvasRenderingContext2D, _worldViewport: Rectangle) {}
 
   isComplete() {
     return false

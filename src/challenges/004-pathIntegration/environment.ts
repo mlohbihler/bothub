@@ -4,10 +4,13 @@ import { IEnvironment, StepEvent, Steppable } from '../../@types'
 import Controller from '../controller'
 import { FPS, regularPolygonVertices, rotate } from '../../planck/boxUtil'
 import Transition from '../../transition'
+import Rectangle from '../../planck/rectangle'
+import { drawOffscreenDirection } from '../offscreenDirection'
 
 export default class Environment implements IEnvironment {
   steppables: Steppable[] = []
   goal
+  agent
 
   constructor(world: World, controller: Controller) {
     const targetStyle = {
@@ -15,7 +18,7 @@ export default class Environment implements IEnvironment {
       stroke: '#4f4f',
     }
 
-    const agent = new Physiology(world, controller)
+    this.agent = new Physiology(world, controller)
 
     const targetCenters: Vec2[] = []
     for (let i = 0; i < 5; i++) {
@@ -33,16 +36,17 @@ export default class Environment implements IEnvironment {
       body.style = targetStyle
     }
 
-    this.goal = new Goal(agent, targetCenters)
-    this.steppables.push(agent, this.goal)
+    this.goal = new Goal(this.agent, targetCenters)
+    this.steppables.push(this.agent, this.goal)
   }
 
   step(evt: StepEvent) {
     this.steppables.forEach(e => e.step(evt))
   }
 
-  render(cx: CanvasRenderingContext2D) {
+  render(cx: CanvasRenderingContext2D, viewport: Rectangle) {
     this.goal.render(cx)
+    drawOffscreenDirection(cx, this.agent.bug.getPosition(), viewport)
   }
 
   isComplete() {

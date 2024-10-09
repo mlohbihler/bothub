@@ -118,7 +118,7 @@ export default class Runner {
 
   render() {
     this.renderer.clear()
-    this.challenge.render(this.renderer.getWorldCanvas())
+    this.challenge.render(this.renderer.getWorldCanvas(), this.renderer.getWorldViewport())
     this.renderer.render(this.challenge.getWorld())
   }
 

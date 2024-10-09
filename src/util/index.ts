@@ -1,5 +1,7 @@
 import { Math } from 'planck'
 
+export const agentColor = '#08f'
+
 export const getRequiredElementById = (id: string) => {
   const ele = document.getElementById(id)
   if (!ele) {

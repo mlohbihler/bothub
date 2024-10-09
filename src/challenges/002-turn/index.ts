@@ -1,11 +1,13 @@
 import { Vec2 } from 'planck'
 import { RendererOptions } from '../../planck/renderer'
+import Challenge from '../challenge'
+import Environment from './environment'
+import Rectangle from '../../planck/rectangle'
+
 // @ts-ignore
 import hint from './hint.js?raw'
 // @ts-ignore
 import info from './info.html?raw'
-import Challenge from '../challenge'
-import Environment from './environment'
 
 export default class Turn extends Challenge<Environment> {
   static getName() {
@@ -39,8 +41,8 @@ export default class Turn extends Challenge<Environment> {
     return undefined
   }
 
-  render(cx: CanvasRenderingContext2D) {
-    this.getEnvironment().render(cx)
+  render(cx: CanvasRenderingContext2D, viewport: Rectangle) {
+    this.getEnvironment().render(cx, viewport)
   }
 
   isComplete() {
