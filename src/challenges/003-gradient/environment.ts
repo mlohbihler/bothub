@@ -5,7 +5,7 @@ import Controller from '../controller'
 import { DebugHelper } from '../../util'
 import Gradient from './gradient'
 import Rectangle from '../../planck/rectangle'
-import { drawOffscreenDirection } from '../offscreenDirection'
+import { drawOffscreenDirection } from '../challengeUtil'
 
 export default class Environment implements IEnvironment {
   updatables: Steppable[] = []

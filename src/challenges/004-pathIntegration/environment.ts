@@ -5,7 +5,7 @@ import Controller from '../controller'
 import { FPS, regularPolygonVertices, rotate } from '../../planck/boxUtil'
 import Transition from '../../transition'
 import Rectangle from '../../planck/rectangle'
-import { drawOffscreenDirection } from '../offscreenDirection'
+import { drawOffscreenDirection } from '../challengeUtil'
 
 export default class Environment implements IEnvironment {
   steppables: Steppable[] = []

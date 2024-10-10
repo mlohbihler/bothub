@@ -3,7 +3,7 @@ import Physiology, { radius } from './physiology'
 import { IEnvironment, StepEvent, Steppable } from '../../@types'
 import Controller from '../controller'
 import Rectangle from '../../planck/rectangle'
-import { drawOffscreenDirection } from '../offscreenDirection'
+import { drawOffscreenDirection } from '../challengeUtil'
 
 export default class Environment implements IEnvironment {
   updatables: Steppable[] = []

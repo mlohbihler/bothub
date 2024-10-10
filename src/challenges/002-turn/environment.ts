@@ -2,7 +2,7 @@ import { Vec2, World } from 'planck'
 import Physiology, { radius } from './physiology'
 import { IEnvironment, StepEvent, Steppable } from '../../@types'
 import Controller from '../controller'
-import { drawOffscreenDirection } from '../offscreenDirection'
+import { drawOffscreenDirection } from '../challengeUtil'
 import Rectangle from '../../planck/rectangle'
 
 export default class Environment implements IEnvironment {
