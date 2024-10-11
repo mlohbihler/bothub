@@ -1,8 +1,8 @@
 // See the info (i) dialog for details about this challenge.
 
 // NOTE: If you came here from a link, you should use the gear
-// icon to check out the first challenge, as that will give
-// you a better introduction to this app.
+// icon to check out the first challenge (forward), as that
+// will give you a better introduction to this app.
 
 // Utility that helps the agent rememeber where contacts were
 // made, whisker, body, and nose. For convenience the contacts

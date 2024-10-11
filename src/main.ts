@@ -92,7 +92,9 @@ window.onload = () => {
   mouseListeners(canvas)
   mp = new Mixpanel(config.guid || '')
 
-  setChallenge()
+  // Check for a challenge name in the url.
+  const challengeName = new URLSearchParams(window.location.search).get('c')
+  setChallenge(challenges.find(c => c.getName() === challengeName))
 }
 
 const initChallenges = () => {
