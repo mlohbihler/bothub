@@ -1,11 +1,11 @@
-import { isNil } from '../../util'
 import { radius, WhiskerId } from '../physiology'
-import { StepEvent, Steppable } from '../../@types'
 import Sensors from '../sensors'
 import { AttributeValue } from '../environment/attributes/attribute'
 import PathIntegrator from './pathIntegrator'
-import { FPS, polarToCart } from '../../boxUtil'
 import { Vec2 } from 'planck'
+import { StepEvent, Steppable } from '../../../@types'
+import { FPS, polarToCart } from '../../../planck/boxUtil'
+import { isNil } from '../../../util'
 
 interface Datum {
   step: number

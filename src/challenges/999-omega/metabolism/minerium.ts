@@ -22,7 +22,7 @@ export default class Minerium extends Resource {
   updateActuators() {}
 
   metabolize() {
-    super.metabolize(0.00004)
+    super.metabolize(0.00012)
   }
 
   isUnconscious() {

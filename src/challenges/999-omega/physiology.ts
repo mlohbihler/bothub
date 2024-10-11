@@ -5,7 +5,6 @@ import Sensors from './sensors'
 import Actuators from './actuators'
 import Nose from './physiology/nose'
 import Resources from './metabolism/resources'
-import Controller from './controller'
 import PhysiologicalBehaviour from './physiology/physiologicalBehaviour'
 import Texture from './environment/attributes/texture'
 import Scent from './environment/attributes/scent'
@@ -16,6 +15,7 @@ import { checkIntersection } from 'line-intersect'
 import Ambience from './environment/attributes/ambience'
 import { EdibleBody } from './environment/edibles/edible'
 import { shorten } from '../../util'
+import Controller from '../controller'
 
 const offsetX = 400
 const offsetY = 1000
@@ -111,7 +111,7 @@ export default class Physiology {
   nose
   resources
 
-  constructor(world: World) {
+  constructor(world: World, controller: Controller) {
     this.world = world
 
     this.bug = world.createDynamicBody({
@@ -135,7 +135,7 @@ export default class Physiology {
 
     this.sensors = new Sensors()
     this.actuators = new Actuators()
-    this.controller = new Controller(this.sensors, this.actuators)
+    this.controller = controller
     this.previousAngle = this.bug.getAngle()
     this.previousPosition = this.bug.getPosition()
     this.nose = new Nose(this.sensors)
@@ -220,7 +220,6 @@ export default class Physiology {
     sensors.ambience = Ambience.queryNearest(pos.x, pos.y).value
     this.previousAngle = bug.getAngle()
     this.previousPosition = Vec2(pos)
-    evt.debugProps.Position = `${Math.round(pos.x)}, ${Math.round(pos.y)}`
     evt.debugProps.Ambience = Ambience.asHex(sensors.ambience)
     // sensors.bodyContacts.forEach(c => {
     //   // Pattern detection
@@ -237,14 +236,15 @@ export default class Physiology {
     //   })
     // })
 
-    if (resources.isUnconscious()) {
-      evt.debugProps.State = 'Unconscious'
-    } else if (resources.isDead()) {
+    if (resources.isDead()) {
       evt.debugProps.State = 'Dead'
+    } else if (resources.isUnconscious()) {
+      evt.debugProps.State = 'Unconscious'
     } else {
       // Step the controller. We do this even if there is a physiological behaviour because the
       // agent shouldn't lose consciousness while they are running.
-      controller.step(evt)
+      controller.step(evt, sensors, actuators)
+
       if (this.physiologicalBehaviour) {
         if (this.physiologicalBehaviour.done(evt)) {
           this.physiologicalBehaviour = undefined
@@ -275,7 +275,6 @@ export default class Physiology {
       sensors.prevSidleAttempted = blur(actuators.sidle)
 
       // Read the actuators
-      //       Sleeping.set(bug, false)
       bug.setAngle(bug.getAngle() + actuators.turn)
       bug.setLinearVelocity(rotate(Vec2(actuators.speed * 60, actuators.sidle * 60), bug.getAngle()))
       evt.debugProps.Turn = `${shorten(actuators.turn)} (${shorten(sensors.prevTurnWanted)})`

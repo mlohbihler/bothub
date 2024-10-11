@@ -7,7 +7,7 @@ export default class Resource {
   amount = 1000
   // Amount available for digestion
   ingested = 0
-  ingestionRate = 0.1
+  ingestionRate = 0.3
 
   sensors
   actuators

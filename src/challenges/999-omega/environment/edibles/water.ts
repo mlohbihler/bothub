@@ -1,11 +1,11 @@
 import Edible, { EdibleBodyDef } from './edible'
 import { AttributeDefinitions } from '../attributes/attribute'
 import { Circle } from 'planck'
-import { FPS } from '../../../boxUtil'
+import { FPS } from '../../../../planck/boxUtil'
 
 export default class Water extends Edible {
   static periodSteps = FPS * 5
-  static startCount = 100
+  static startCount = 40
   static centroidX = 1000
   static centroidY = 1000
   // TODO: reinstate

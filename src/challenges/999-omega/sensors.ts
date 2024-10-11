@@ -2,7 +2,7 @@ import { Vec2 } from 'planck'
 import Whiskers from './physiology/whiskers'
 import ContactMemory from './tools/contactMemory'
 import { AttributeValue } from './environment/attributes/attribute'
-import Ambience from './environment/attributes/ambience'
+import { ISensors } from '../../@types'
 
 export interface BodyContact {
   angle: number
@@ -10,7 +10,7 @@ export interface BodyContact {
   tangentImpulse: number
 }
 
-export default class Sensors {
+export default class Sensors implements ISensors {
   // The amount of actuation that the controller wanted in the previous timestep. The controller
   // can wanted anything, but because of phsiological constraints may not be able to achieve it.
   prevTurnWanted = 0

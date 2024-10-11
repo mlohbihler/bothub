@@ -1,10 +1,15 @@
 import { Vec2 } from 'planck'
-import { minimizeAngle, shorten } from './util'
-import { rotate, vectorAngle } from './planck/boxUtil'
+import { isNil, minimizeAngle, shorten } from './util'
+import { FPS, polarToCart, rotate, vectorAngle } from './planck/boxUtil'
+import { PathIntegrator } from './challenges/challengeUtil'
 
 export default {
   formatTime,
+  FPS,
+  isNil,
   minimizeAngle,
+  PathIntegrator,
+  polarToCart,
   rotate,
   shorten,
   Vec2,

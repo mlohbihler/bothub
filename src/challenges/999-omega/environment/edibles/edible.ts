@@ -1,11 +1,11 @@
-import { gaussian } from '../../../util'
 import Texture from '../attributes/texture'
 import Scent from '../attributes/scent'
 import PeriodTimeout from '../../tools/periodTimeout'
 import { AttributeDefinitions } from '../attributes/attribute'
 import { AABB, Body, Shape, Vec2, World } from 'planck'
-import { rotate } from '../../../boxUtil'
-import { PerceptibleBody, PerceptibleBodyDef, StepEvent } from '../../../@types'
+import { PerceptibleBody, PerceptibleBodyDef, StepEvent } from '../../../../@types'
+import { gaussian } from '../../../../util'
+import { rotate } from '../../../../planck/boxUtil'
 
 export interface EdibleBodyData {
   bestBefore: number
@@ -132,8 +132,9 @@ export default class Edible {
 
   createFromLocationAndShape(location: Vec2, bodyDef: EdibleBodyDef, shape: Shape, color: string) {
     bodyDef.position = location
+    bodyDef.angularDamping = 1
     const body = this.world.createDynamicBody(bodyDef) as EdibleBody
-    body.createFixture({ shape })
+    body.createFixture({ shape, density: 0.01 })
     body.style = {
       fill: `${color}8`,
       stroke: `${color}f`,

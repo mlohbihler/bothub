@@ -1,4 +1,4 @@
-import { gaussian, isNil } from '../../../util'
+import { gaussian, isNil } from '../../../../util'
 
 type Centroid = number
 type Sigma = number

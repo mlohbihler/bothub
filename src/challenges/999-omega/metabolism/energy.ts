@@ -3,7 +3,7 @@ import Resource from './resource'
 
 export default class Energy extends Resource {
   colour = '#0f0'
-  ingestionRate = 0.01
+  ingestionRate = 0.03
 
   updateSensors() {
     const { amount, sensors } = this
@@ -30,11 +30,11 @@ export default class Energy extends Resource {
       actuators: { sidle, speed, turn },
     } = this
 
-    const a = sidle * 0.004
-    const b = speed * 0.001
-    const c = (turn / maxTurn) * 0.002
+    const a = sidle * 0.012
+    const b = speed * 0.003
+    const c = (turn / maxTurn) * 0.006
 
-    super.metabolize(0.002 + a + b + c)
+    super.metabolize(0.006 + a + b + c)
   }
 
   isUnconscious() {

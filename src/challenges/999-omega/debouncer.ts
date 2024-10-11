@@ -1,4 +1,4 @@
-import { clamp } from '../util'
+import { clamp } from '../../util'
 
 export default class Debouncer {
   threshold

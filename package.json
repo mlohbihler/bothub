@@ -17,6 +17,8 @@
     "codemirror": "^6.0.1",
     "eslint": "^8.57.1",
     "eslint-linter-browserify": "^9.11.0",
+    "kld-intersections": "^0.7.0",
+    "line-intersect": "^3.0.0",
     "mixpanel-browser": "^2.55.1",
     "planck": "^1.0.5"
   },

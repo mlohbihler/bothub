@@ -1,5 +1,5 @@
-import { StepEvent } from '../../@types'
-import { FPS } from '../../boxUtil'
+import { StepEvent } from '../../../@types'
+import { FPS } from '../../../planck/boxUtil'
 import Actuators from '../actuators'
 import Edibles from '../environment/edibles/edibles'
 import Resources from '../metabolism/resources'

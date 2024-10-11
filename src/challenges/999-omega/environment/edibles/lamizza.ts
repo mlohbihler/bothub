@@ -1,7 +1,7 @@
 import Edible, { EdibleBodyDef } from './edible'
 import { AttributeDefinitions } from '../attributes/attribute'
-import { FPS, regularPolygonVertices } from '../../../boxUtil'
 import { Polygon } from 'planck'
+import { FPS, regularPolygonVertices } from '../../../../planck/boxUtil'
 
 export default class Lamizza extends Edible {
   static periodSteps = FPS * 10

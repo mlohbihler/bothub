@@ -1,11 +1,11 @@
 import Edible, { EdibleBodyDef } from './edible'
 import { AttributeDefinitions } from '../attributes/attribute'
-import { FPS, regularPolygonVertices } from '../../../boxUtil'
+import { FPS, regularPolygonVertices } from '../../../../planck/boxUtil'
 import { Polygon } from 'planck'
 
 export default class Bracizza extends Edible {
   static periodSteps = FPS * 12
-  static startCount = 100
+  static startCount = 10
   static expiry = FPS * 60 * 60 * 3 // 3 hours
   static radius = 3
 

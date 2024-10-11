@@ -1,11 +1,12 @@
-import { clamp } from '../util'
+import { IActuators } from '../../@types'
+import { clamp } from '../../util'
 
 export const maxTurn = Math.PI / 12 // 30 degrees
 export const minSpeed = -0.5
 export const maxSpeed = 4
 export const maxSidle = 0.4
 
-export default class Actuators {
+export default class Actuators implements IActuators {
   speed = 0
   turn = 0
   sidle = 0

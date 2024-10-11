@@ -2,7 +2,7 @@ import Resource from './resource'
 
 export default class Water extends Resource {
   colour = '#00f'
-  ingestionRate = 0.02
+  ingestionRate = 0.06
 
   updateSensors() {
     const { amount, sensors } = this
@@ -35,10 +35,10 @@ export default class Water extends Resource {
       actuators: { sidle, speed },
     } = this
 
-    const a = sidle * 0.001
-    const b = speed * 0.0003
+    const a = sidle * 0.003
+    const b = speed * 0.0009
 
-    super.metabolize(0.005 + a + b)
+    super.metabolize(0.015 + a + b)
   }
 
   isUnconscious() {

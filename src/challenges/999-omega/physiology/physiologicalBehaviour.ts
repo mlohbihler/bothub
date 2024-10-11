@@ -1,4 +1,4 @@
-import { StepEvent } from '../../@types'
+import { StepEvent } from '../../../@types'
 import Actuators from '../actuators'
 import Behaviour from '../behaviour'
 import Resources from '../metabolism/resources'

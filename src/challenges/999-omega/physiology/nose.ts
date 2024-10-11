@@ -1,7 +1,7 @@
 import { Body } from 'planck'
-import { PerceptibleBody, StepEvent } from '../../@types'
 import Sensors from '../sensors'
-import { FPS } from '../../boxUtil'
+import { FPS } from '../../../planck/boxUtil'
+import { PerceptibleBody, StepEvent } from '../../../@types'
 
 export default class Nose {
   static textureDuration = FPS * 0.5 // Half a second

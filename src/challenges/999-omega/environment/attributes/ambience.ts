@@ -1,5 +1,5 @@
-import { StepEvent } from '../../../@types'
-import { DebugHelper, distanceSquared } from '../../../util'
+import { StepEvent } from '../../../../@types'
+import { DebugHelper, distanceSquared } from '../../../../util'
 import PeriodTimeout from '../../tools/periodTimeout'
 import Attribute, { AttributeDefinitions, AttributeValue } from './attribute'
 

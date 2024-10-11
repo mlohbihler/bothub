@@ -3,7 +3,7 @@ import Resource from './resource'
 export default class Vitamium extends Resource {
   colour = '#f00'
   amount = 700
-  ingestionRate = 0.005
+  ingestionRate = 0.015
 
   updateSensors() {
     const { amount, sensors } = this
@@ -30,7 +30,7 @@ export default class Vitamium extends Resource {
   }
 
   metabolize() {
-    super.metabolize(0.0001)
+    super.metabolize(0.0003)
   }
 
   isUnconscious() {

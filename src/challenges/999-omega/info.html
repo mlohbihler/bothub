@@ -1,0 +1,193 @@
+<h1>Challenge: <i>All Dressed</i></h1>
+<p>
+  This challenge isn't so much a challenge - it doesn't have a goal - as much as a more comprehensive environment in
+  which to play around. It has edibles (food and water) that appears in places that depend on the type, obstacles,
+  whiskers, metabolism, ambience, and more. Here you can decide you're own goals and write code to solve them.
+</p>
+<h2>Sensors</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+  </thead>
+  <tr>
+    <td>prevTurnWanted</td>
+    <td>numnber</td>
+    <td>The turn that the controller code set in the actuators in the last step.</td>
+  </tr>
+  <tr>
+    <td>prevSpeedWanted</td>
+    <td>Vec2</td>
+    <td>The speed that the controller code set in the actuators in the last step.</td>
+  </tr>
+  <tr>
+    <td>prevSidleWanted</td>
+    <td>number</td>
+    <td>The sidle that the controller code set in the actuators in the last step.</td>
+  </tr>
+  <tr>
+    <td>prevTurnAttempted</td>
+    <td>numnber</td>
+    <td>
+      The turn that the agent attempted in the last step. This is the value that the controller wanted after clamping
+      based upon physiological limits, and other constraints.
+    </td>
+  </tr>
+  <tr>
+    <td>prevSpeedAttempted</td>
+    <td>Vec2</td>
+    <td>
+      The speed that the agent attempted in the last step. This is the value that the controller wanted after clamping
+      based upon physiological limits, and other constraints.
+    </td>
+  </tr>
+  <tr>
+    <td>prevSidleAttempted</td>
+    <td>number</td>
+    <td>
+      The sidle that the agent attempted in the last step. This is the value that the controller wanted after clamping
+      based upon physiological limits, and other constraints.
+    </td>
+  </tr>
+  <tr>
+    <td>prevVelocityAchieved</td>
+    <td>Vec2</td>
+    <td>
+      The x/y translational change WRT the agent's center that was achieved in the last step. Note that the agent can
+      request any speed, turn, or sidle it wants, but what actually is achieved is subject to things like physiological
+      constraints, fatigue, illness, obstacles, or terrain. Also, the values have been rounded to 2 decimal places,
+      since no sensor values should ever be considered exact.
+    </td>
+  </tr>
+  <tr>
+    <td>prevAngularVelocityAchieved</td>
+    <td>number</td>
+    <td>
+      The actual amount of orientation change made in the previous step. The value has been rounded to 2 decimal places,
+      since no sensor values should ever be considered exact.
+    </td>
+  </tr>
+  <tr>
+    <td>bodyContacts</td>
+    <td>{ angle: number, normalImpulse: number, tangentImpulse: number }[]</td>
+    <td>
+      Array of contacts made against the body of the agent. The angle is the contact point on the body surface with
+      respect to the center of the body, where the nose is 0.
+    </td>
+  </tr>
+  <tr>
+    <td>whiskers</td>
+    <td>{ [key: 'tl' | 'l' | 'hl' | 'h' | 'hr' | 'r' | 'tr': number }</td>
+    <td>
+      Contact information for the agent's whiskers. The presence of an entry indicates that a contact exists. The number
+      value represents the depth of the contact from the tip of the whisker.
+    </td>
+  </tr>
+  <tr>
+    <td>hunger</td>
+    <td>number</td>
+    <td>
+      Hunger ranges from 0 (none) to 5 (very hungry), and represents the level of energy the agent has in its resources.
+      Fatigue from hunger can reduce physical performance. Energy is metabolized at a constant rate, but also during
+      movement.
+    </td>
+  </tr>
+  <tr>
+    <td>thirst</td>
+    <td>number</td>
+    <td>
+      Thirst ranges from 0 (none) to 5 (very thirsty), and represents the level of water the agent has in its resources.
+      Fatigue from hunger can reduce physical performance. Water is metabolized at a constant rate, but also during
+      movement.
+    </td>
+  </tr>
+  <tr>
+    <td>illness</td>
+    <td>number</td>
+    <td>
+      Illness represents a range of physoilogical conditions, including low levels of minerium and viterium, and high
+      levels of toxium, minerium, viterium, and water.
+    </td>
+  </tr>
+  <tr>
+    <td>fatigue</td>
+    <td>number</td>
+    <td>Fatigue is caused by overexertion, and limits the speed at which the agent can move.</td>
+  </tr>
+  <tr>
+    <td>drinking</td>
+    <td>boolean</td>
+    <td>Whether the agent is currently drinking. This state renders the agent prone for three seconds.</td>
+  </tr>
+  <tr>
+    <td>eating</td>
+    <td>boolean</td>
+    <td>Whether the agent is currently eating. This state renders the agent prone for five seconds.</td>
+  </tr>
+  <tr>
+    <td>noseTexture</td>
+    <td>hex as string</td>
+    <td>
+      A value representing the texture the nose can sense, consisting of smoothness, temperature, and solidity. Textures
+      take 0.5 seconds to recognize.
+    </td>
+  </tr>
+  <tr>
+    <td>noseScent</td>
+    <td>hex as string</td>
+    <td>
+      A value representing the scent the nose can sense, consisting of four unnamed attributes. Scents take three
+      seconds to recognize.
+    </td>
+  </tr>
+  <tr>
+    <td>ambience</td>
+    <td>hex as string</td>
+    <td>
+      A value representing the ambience of the area the agent is currently within, consisting of brightness, humidity,
+      and colour. Ambience can be used for self locating and path finding.
+    </td>
+  </tr>
+</table>
+
+<h2>Actuators</h2>
+<table>
+  <thead>
+    <td>Key</td>
+    <td>Description</td>
+    <td>Range</td>
+  </thead>
+  <tr>
+    <td>speed</td>
+    <td>How fast the agent moves forward or backward.</td>
+    <td>-0.5 ... 4, but maximums may be affected by the physoilogical state of the agent</td>
+  </tr>
+  <tr>
+    <td>turn</td>
+    <td>Rate of turning.</td>
+    <td>-&#x03C0;/12 ... &#x03C0;/12, but maximums may be affected by the physoilogical state of the agent</td>
+  </tr>
+  <tr>
+    <td>sidle</td>
+    <td>How fast the agent moves side to side.</td>
+    <td>-0.4 ... 0.4, but maximums may be affected by the physoilogical state of the agent</td>
+  </tr>
+  <tr>
+    <td>startDrink</td>
+    <td>
+      Set to true to have the agent consume a water body, which must be in contact with the nose. This will disable all
+      other actuators for a period of time whether. (See <code>drinking</code> in sensors.) The edible will be eaten
+      immediately, but takes time to digest.
+    </td>
+    <td>false/true</td>
+  </tr>
+  <tr>
+    <td>startEat</td>
+    <td>
+      Set to true to have the agent consume a food edible, which must be in contact with the nose. This will disable all
+      other actuators for a period of time. (See <code>drinking</code> in sensors.) The edible will be eaten
+      immediately, but takes time to digest.
+    </td>
+    <td>false/true</td>
+  </tr>
+</table>

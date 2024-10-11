@@ -11,29 +11,30 @@ import Sugazza from './environment/edibles/sugazza'
 import Texture from './environment/attributes/texture'
 import Scent from './environment/attributes/scent'
 import Ambience from './environment/attributes/ambience'
-// import Edible from './environment/edibles/edible'
 import { AttributeDefinitions } from './environment/attributes/attribute'
-import { PerceptibleBody, StepEvent, Steppable } from '../@types'
+import { IEnvironment, PerceptibleBody, StepEvent, Steppable } from '../../@types'
+import Controller from '../controller'
+import Rectangle from '../../planck/rectangle'
+import { drawOffscreenDirection } from '../challengeUtil'
 
-export default class Environment {
+export default class Environment implements IEnvironment {
   updatables: Steppable[] = []
   agent
 
-  constructor(world: World) {
+  constructor(world: World, controller: Controller) {
     // Obstacles
     //       // svgObstacle(600, 600),
-    simpleObstacle(world, 600, 1000)
+    sugazzaWalls(world)
     // circularObstacle(world, 500, 600, 100)
     // circularObstacle(world, 700, 600, 500)
 
-    // TODO: Try using edges instead.
-    border(world, 0, 0, 0, 1600)
-    border(world, 0, 1600, 1600, 0)
-    border(world, 1600, 1600, 0, -1600)
-    border(world, 1600, 0, -1600, 0)
+    // border(world, 0, 0, 0, 1600)
+    // border(world, 0, 1600, 1600, 0)
+    // border(world, 1600, 1600, 0, -1600)
+    // border(world, 1600, 0, -1600, 0)
 
     // Updatables
-    const agent = new Physiology(world)
+    const agent = new Physiology(world, controller)
     this.agent = agent
     this.updatables.push(agent)
     this.updatables.push(new Water(world))
@@ -52,6 +53,10 @@ export default class Environment {
 
   step(evt: StepEvent) {
     this.updatables.forEach(e => e.step(evt))
+  }
+
+  render(cx: CanvasRenderingContext2D, viewport: Rectangle) {
+    drawOffscreenDirection(cx, this.agent.bug.getPosition(), viewport)
   }
 }
 
@@ -94,15 +99,80 @@ const obstacleScentDef: AttributeDefinitions = [
 const simpleObstacle = (world: World, x: number, y: number) => {
   const vertices = [
     Vec2(0, -50),
-    // Vec2(100, -40),
+    Vec2(100, -40),
     Vec2(200, 40),
     Vec2(400, 50),
-    // Vec2(300, 0),
+    Vec2(300, 200),
     // Vec2(400, -400),
-    Vec2(0, -400),
+    // Vec2(0, -400),
   ]
   createObstacle(world, x, y, Polygon(vertices), '#6308', '#666F')
 }
+
+const sugazzaWalls = (world: World) => {
+  createObstacle(
+    world,
+    600,
+    1000,
+    toPolygon([
+      [0, 0],
+      [300, -240],
+      [200, 140],
+    ]),
+    '#6308',
+    '#666F',
+  )
+  createObstacle(
+    world,
+    700,
+    1190,
+    toPolygon([
+      [0, 0],
+      [100, -40],
+      [200, 40],
+    ]),
+    '#6408',
+    '#666F',
+  )
+  createObstacle(
+    world,
+    700,
+    1300,
+    toPolygon([
+      [0, 0],
+      [80, -130],
+      [200, 300],
+    ]),
+    '#6508',
+    '#666F',
+  )
+  createObstacle(
+    world,
+    800,
+    1500,
+    toPolygon([
+      [0, 0],
+      [400, 20],
+      [500, -200],
+    ]),
+    '#6608',
+    '#666F',
+  )
+  createObstacle(
+    world,
+    900,
+    1200,
+    toPolygon([
+      [0, 0],
+      [600, 60],
+      [500, -200],
+    ]),
+    '#6608',
+    '#666F',
+  )
+}
+
+const toPolygon = (coords: [number, number][]) => Polygon(coords.map(([x, y]) => Vec2(x, y)))
 
 const circularObstacle = (world: World, x: number, y: number, r: number) => {
   createObstacle(world, x, y, Circle(r), '#6308', '#630F')

@@ -1,6 +1,6 @@
 import Edible, { EdibleBodyDef } from './edible'
 import { AttributeDefinitions } from '../attributes/attribute'
-import { FPS, regularPolygonVertices } from '../../../boxUtil'
+import { FPS, regularPolygonVertices } from '../../../../planck/boxUtil'
 import { Polygon } from 'planck'
 
 export default class Reyzza extends Edible {

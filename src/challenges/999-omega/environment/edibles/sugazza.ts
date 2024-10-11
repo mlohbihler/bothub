@@ -1,11 +1,11 @@
 import Edible, { EdibleBodyDef } from './edible'
 import { AttributeDefinitions } from '../attributes/attribute'
 import { Polygon } from 'planck'
-import { FPS, regularPolygonVertices } from '../../../boxUtil'
+import { FPS, regularPolygonVertices } from '../../../../planck/boxUtil'
 
 export default class Sugazza extends Edible {
   static periodSteps = FPS * 20
-  static startCount = 0
+  static startCount = 20
   static seasonDuration = FPS * 60 * 60 * 2 // 2 hours
   static seasonCount = 5
   static expiry = FPS * 60 * 60 * 24 * 2 // 48 hours

@@ -39,7 +39,10 @@ import GearButton from './assets/svg/fa-gear.svg?raw'
 // @ts-ignore
 import InfoButton from './assets/svg/fa-info.svg?raw'
 // @ts-ignore
+import DiscordButton from './assets/svg/fa-discord.svg?raw'
+// @ts-ignore
 import NextButton from './assets/svg/fa-forward-fast.svg?raw'
+import AllDressed from './challenges/999-omega'
 
 // TODO: don't allow changing challenge to beyond what has already been completed until the basics are done.
 
@@ -93,7 +96,7 @@ window.onload = () => {
 }
 
 const initChallenges = () => {
-  challenges = [Forward, Turn, Gradient, PathIntegration, Gradient2]
+  challenges = [Forward, Turn, Gradient, PathIntegration, Gradient2, AllDressed]
 }
 
 const localStorageName = (challenge: Challenge<IEnvironment>) =>
@@ -102,7 +105,7 @@ const localStorageName = (challenge: Challenge<IEnvironment>) =>
 const initEditor = () => {
   const saveAndRun = (reset: boolean) => {
     updateScript()
-    if (reset) resetChallenge()
+    if (reset) resetChallenge(false)
     // Always return true so that the browser save dialog is not raised.
     return true
   }
@@ -170,9 +173,8 @@ const initCanvas = () => {
 
 const initButtons = () => {
   const buttons = getRequiredElementById('buttons')
-  createElement(buttons, BackwardButton, { id: 'resetButton', ariaLabel: 'reset' }).addEventListener(
-    'click',
-    resetChallenge,
+  createElement(buttons, BackwardButton, { id: 'resetButton', ariaLabel: 'reset' }).addEventListener('click', () =>
+    resetChallenge(),
   )
   createElement(buttons, PauseButton, { id: 'pauseButton' }).addEventListener('click', toggleRunner)
   createElement(buttons, PlayButton, { id: 'playButton' }).addEventListener('click', toggleRunner)
@@ -185,9 +187,12 @@ const initButtons = () => {
   createElement(help, InfoButton, { id: 'infoButton' }).addEventListener('click', () =>
     infoModal.showChallenge(challenge),
   )
+  createElement(help, DiscordButton).addEventListener('click', () =>
+    window.open('https://discord.gg/8mhyutmB', '_blank'),
+  )
 
   createElement(getRequiredElementById('retryChallengeIcon'), BackwardButton)
-  getRequiredElementById('retryChallenge').addEventListener('click', resetChallenge)
+  getRequiredElementById('retryChallenge').addEventListener('click', () => resetChallenge())
 
   createElement(getRequiredElementById('nextChallengeIcon'), NextButton)
   getRequiredElementById('nextChallenge').addEventListener('click', setNextChallenge)
@@ -231,9 +236,9 @@ const saveConfig = (update: Partial<Config>) => {
   localStorage.setItem(LOCAL_STORAGE_CONFIG_KEY, JSON.stringify(config))
 }
 
-const resetChallenge = () => {
+const resetChallenge = (recenter = true) => {
   challenge.reset()
-  renderer.recenter()
+  if (recenter) renderer.recenter()
   runner.reset()
   challengeCompleteAnimation?.stop()
 }

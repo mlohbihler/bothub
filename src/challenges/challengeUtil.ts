@@ -1,10 +1,11 @@
 import { Vec2 } from 'planck'
-import { agentColor, clamp } from '../util'
-import { vectorAngle } from '../planck/boxUtil'
+import { agentColor, clamp, minimizeAngle } from '../util'
+import { rotate, vectorAngle } from '../planck/boxUtil'
 import Rectangle from '../planck/rectangle'
 
 // @ts-ignore
 import Chevron from '../assets/svg/fa-chevron-up.svg?raw'
+import { StepEvent } from '../@types'
 
 const defaultSensorPrecision = 2
 
@@ -42,5 +43,48 @@ export const drawOffscreenDirection = (cx: CanvasRenderingContext2D, target: Vec
     cx.lineWidth = 5
     cx.strokeStyle = agentColor
     cx.stroke(chevronPath)
+  }
+}
+
+export class PathIntegrator {
+  // The difference from the original agent angle.
+  angle = 0
+  // The displacement from the original location wrt the original angle.
+  displacement = Vec2()
+
+  // Testing. Only available in All Dressed.
+  worldPosition?: Vec2
+  worldAngle?: number
+
+  step(sensors: { [key: string]: any }, evt?: StepEvent) {
+    if (evt && !this.worldPosition) {
+      // For debugging
+      this.worldPosition = evt?.position
+      this.worldAngle = evt?.angle
+    }
+
+    this.angle += sensors.prevAngularVelocityAchieved
+    const diff = rotate(sensors.prevVelocityAchieved, this.angle)
+    this.displacement.add(diff)
+  }
+
+  distance() {
+    return this.displacement.length()
+  }
+
+  returnAngle() {
+    return vectorAngle(Vec2.neg(this.displacement))
+  }
+
+  returnAngleDiff() {
+    return minimizeAngle(this.returnAngle() - this.angle)
+  }
+
+  minimizedAngle() {
+    return minimizeAngle(this.angle)
+  }
+
+  toWorld(vec: Vec2) {
+    return rotate(vec, this.worldAngle || 0).add(this.worldPosition || Vec2())
   }
 }

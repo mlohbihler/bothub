@@ -1,9 +1,9 @@
 import { checkIntersection, Point } from 'line-intersect'
-import { WhiskerDefs, WhiskerId } from '.'
 import { CircleShape, EdgeShape, Fixture, PolygonShape, Transform, Vec2 } from 'planck'
-import { eachEdge, rotate } from '../../boxUtil'
 import { ShapeInfo, Intersection } from 'kld-intersections'
-import { min } from '../../util'
+import { WhiskerDefs, WhiskerId } from '../physiology'
+import { eachEdge, rotate } from '../../../planck/boxUtil'
+import { min } from '../../../util'
 
 interface NearestPoint extends Point {
   distance: number
