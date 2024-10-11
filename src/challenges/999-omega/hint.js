@@ -10,6 +10,10 @@
 // and angle for the agent, which in other challenges is not
 // available. Contact memory can be used in conjunction with
 // the path integrator to remember where edibles can be found.
+
+// NOTE: values given to the path integrator that the contact
+// memory uses are not exact, and so the accuracy of the memory
+// will degrade over time.
 class ContactMemory {
   memory = []
   pathIntegrator = new GID.PathIntegrator()

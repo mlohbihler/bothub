@@ -23,6 +23,8 @@ import Turn from './challenges/002-turn'
 import Gradient from './challenges/003-gradient'
 import PathIntegration from './challenges/004-pathIntegration'
 import Gradient2 from './challenges/005-gradient2'
+import Gather from './challenges/006-gather'
+import AllDressed from './challenges/999-omega'
 
 // @ts-ignore
 import PlayButton from './assets/svg/fa-play.svg?raw'
@@ -42,7 +44,6 @@ import InfoButton from './assets/svg/fa-info.svg?raw'
 import DiscordButton from './assets/svg/fa-discord.svg?raw'
 // @ts-ignore
 import NextButton from './assets/svg/fa-forward-fast.svg?raw'
-import AllDressed from './challenges/999-omega'
 
 // TODO: don't allow changing challenge to beyond what has already been completed until the basics are done.
 
@@ -98,7 +99,7 @@ window.onload = () => {
 }
 
 const initChallenges = () => {
-  challenges = [Forward, Turn, Gradient, PathIntegration, Gradient2, AllDressed]
+  challenges = [Forward, Turn, Gradient, PathIntegration, Gradient2, Gather, AllDressed]
 }
 
 const localStorageName = (challenge: Challenge<IEnvironment>) =>

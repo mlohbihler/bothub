@@ -1,5 +1,5 @@
-import { AABB, Body, Circle, EdgeShape, Fixture, FixtureDef, Polygon, PolygonShape, Vec2, World } from 'planck'
-import { eachEdge, forEachContactEdge, rotate, vectorAngle } from '../../planck/boxUtil'
+import { Body, Circle, FixtureDef, Polygon, Vec2, World } from 'planck'
+import { fixtureIntersectionPoints, forEachContactEdge, rotate } from '../../planck/boxUtil'
 import { StepEvent } from '../../@types'
 import Sensors from './sensors'
 import Actuators from './actuators'
@@ -10,19 +10,16 @@ import Texture from './environment/attributes/texture'
 import Scent from './environment/attributes/scent'
 import Drink from './physiology/drink'
 import Eat from './physiology/eat'
-import { min, minimizeAngle } from '../../util'
-import { checkIntersection } from 'line-intersect'
 import Ambience from './environment/attributes/ambience'
 import { EdibleBody } from './environment/edibles/edible'
 import { shorten } from '../../util'
 import Controller from '../controller'
+import { blur, blurAngle, blurVector } from '../challengeUtil'
 
 const offsetX = 400
 const offsetY = 1000
 const angle = 0 // 1
 export const radius = 10
-const radiusSq = radius * radius
-const sensorPrecision = 10 // 2
 const agentBodyId = 'agentBody'
 
 // Whiskers originate at the center of the agent body because otherwise they can end up entirely
@@ -178,7 +175,7 @@ export default class Physiology {
         const normalImpulse = edge.contact.getManifold().points[0].normalImpulse
         const tangentImpulse = edge.contact.getManifold().points[0].tangentImpulse
 
-        const angles = intersectionPoints(body, otherFixture)
+        const angles = fixtureIntersectionPoints(body, otherFixture, radius)
         angles.forEach(a => {
           sensors.bodyContacts.push({
             angle: blurAngle(a),
@@ -295,122 +292,4 @@ const createWhiskerFixtureDef = (id: WhiskerId, length: number, angle: number) =
     userData: id,
     shape: Polygon(vertices),
   } as FixtureDef
-}
-
-const blur = (n: number) => Number(n.toPrecision(sensorPrecision))
-
-const blurVector = (v: Vec2) => {
-  v.x = Number(v.x.toPrecision(sensorPrecision))
-  v.y = Number(v.y.toPrecision(sensorPrecision))
-  return v
-}
-
-// Rounds numbers to the nearest 0.05
-const blurAngle = (a: number) => Number((a * 2).toFixed(1)) / 2
-
-interface NearestPoint extends Vec2 {
-  type?: 'intersection' | 'vertex'
-  distanceSq?: number
-}
-const edgeAABB = AABB()
-const CONTACT_RADIUS = radius * 1.01
-const intersectionPoints = (agentFixture: Fixture, otherFixture: Fixture) => {
-  if (agentFixture.getShape().getType() !== 'circle') throw Error('Agent shape must be a circle')
-
-  const contactAngles = []
-  const pos = agentFixture.getBody().getPosition()
-  const angle = agentFixture.getBody().getAngle()
-  const otherShape = otherFixture.getShape()
-  const otherShapeType = otherShape.getType()
-  if (otherShapeType === 'circle') {
-    const otherPos = otherFixture.getBody().getPosition()
-    const diffVec = Vec2.sub(otherPos, pos)
-    contactAngles.push(minimizeAngle(vectorAngle(diffVec) - angle))
-  } else if (otherShapeType === 'polygon' || otherShapeType === 'edge') {
-    const agentAABB = AABB(
-      Vec2(pos.x - CONTACT_RADIUS, pos.y - CONTACT_RADIUS),
-      Vec2(pos.x + CONTACT_RADIUS, pos.y + CONTACT_RADIUS),
-    )
-    let otherVertices
-    if (otherShapeType === 'polygon') {
-      otherVertices = (otherShape as PolygonShape).m_vertices
-    } else {
-      const edge = otherShape as EdgeShape
-      otherVertices = [edge.m_vertex1, edge.m_vertex2]
-    }
-    const points: NearestPoint[] = []
-    let foundIntersection = false
-
-    otherFixture.getBody().getTransform()
-
-    eachEdge(otherVertices, otherFixture.getBody().getTransform(), (from, to) => {
-      // Ensure that there are bounds overlap first
-      AABB.combinePoints(edgeAABB, from, to)
-      if (!AABB.testOverlap(agentAABB, edgeAABB)) return
-
-      // Find a line that bisects the agent body that is perpendicular to this edge.
-      const perp = Vec2(to.y - from.y, from.x - to.x)
-      const factor = CONTACT_RADIUS / perp.length()
-      perp.mul(factor)
-      const result = checkIntersection(
-        from.x,
-        from.y,
-        to.x,
-        to.y,
-        pos.x + perp.x,
-        pos.y + perp.y,
-        pos.x - perp.x,
-        pos.y - perp.y,
-      )
-      let nearest: NearestPoint | null = null
-      if (result.type === 'intersecting') {
-        nearest = Vec2.sub(result.point, pos)
-        nearest.type = 'intersection'
-        foundIntersection = true
-      } else if (result.type === 'none' && !foundIntersection) {
-        // The segments may not intersect, but the edge could still penetrate the agent body. Find if
-        // either end point is within the agent radius.
-        const fromVec = Vec2.sub(from, pos)
-        const fromSq = fromVec.lengthSquared()
-        const toVec = Vec2.sub(to, pos)
-        const toSq = toVec.lengthSquared()
-        if (fromSq < toSq) {
-          nearest = fromVec
-          nearest.distanceSq = fromSq
-        } else {
-          nearest = toVec
-          nearest.distanceSq = toSq
-        }
-        if (nearest.distanceSq <= radiusSq) {
-          nearest.type = 'vertex'
-        } else {
-          nearest = null
-        }
-      }
-      if (nearest) {
-        points.push(nearest)
-      }
-    })
-
-    // There are two types of intersection found: one with an intersection point, and one where we
-    // choose the closest point of a non-intersecting segment. If we have any of the former, we
-    // discard the latter. If we only have the latter, we return only one instance of the closest
-    // point. The goal is to retain legitimate cases of multiple contact points and discard
-    // duplicates.
-    if (foundIntersection) {
-      // Return angles for all intersection points.
-      points.forEach(p => {
-        if (p.type === 'vertex') return
-        contactAngles.push(minimizeAngle(vectorAngle(p) - angle))
-      })
-    } else if (points.length) {
-      // Return only the angle of the minimum distance point.
-      const nearest = min(points, p => p.distanceSq || Infinity) as Vec2
-      contactAngles.push(minimizeAngle(vectorAngle(nearest) - angle))
-    }
-  } else {
-    throw Error(`Unhandled shape: '${otherShapeType}'`)
-  }
-
-  return contactAngles
 }
