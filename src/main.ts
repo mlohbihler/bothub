@@ -6,7 +6,7 @@ import { Prec } from '@codemirror/state'
 import { EditorView, keymap } from '@codemirror/view'
 import * as eslint from 'eslint-linter-browserify'
 
-import { createElement, getContext, getRequiredElementById } from './util'
+import { createElement, getContext, getRequiredElementById, isTouchDevice } from './util'
 import Renderer from './planck/renderer'
 import { FPS } from './planck/boxUtil'
 import Runner from './runner'
@@ -96,6 +96,10 @@ window.onload = () => {
   // Check for a challenge name in the url.
   const challengeName = new URLSearchParams(window.location.search).get('c')
   setChallenge(challenges.find(c => c.getName() === challengeName))
+
+  if (isTouchDevice()) {
+    alert(`This app works best on laptops/desktops. Touch screens aren't yet supported. Sorry for the hassle.`)
+  }
 }
 
 const initChallenges = () => {

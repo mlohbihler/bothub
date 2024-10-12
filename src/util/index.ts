@@ -216,3 +216,5 @@ export const minmax = (arr: number[]) =>
     },
     [Infinity, -Infinity] as [number, number],
   )
+
+export const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0
