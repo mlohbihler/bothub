@@ -7,6 +7,7 @@
 // let state = 'turn'
 // let count = 0
 const step = (evt, sensors, actuators) => {
+  // HINT: Use Ctrl+/ or ⌘/ to uncomment lines or selection blocks.
   // if (state === 'turn') {
   //   actuators.turn = 0.3
   //   count++
