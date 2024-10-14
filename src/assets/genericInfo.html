@@ -178,8 +178,13 @@
   The GID namespace provides a number of convenience functions you can use in your scripts. These include:
   <br /><br />
   <code class="snippet">
-    formatTime(time: number)<br />
+    clamp(num: number, min: number, max: number): number<br />
+    formatTime(time: number): string<br />
+    FPS: number<br />
+    isNil(v: any): boolean<br />
     minimizeAngle(a: number) // reduces a given angle to the range -Math.PI to Math.PI<br />
+    PathIntegrator<br />
+    polarToCart(mag: number, angle: number): Vec2<br />
     rotate(vector: Vec2, angle: number, mutate = false) // Rotates the given vector by the given angle, returing a new
     Vec2 object if mutate is false<br />
     shorten(n: number) // Removes excess decimals from the given number, preserving precision<br />
