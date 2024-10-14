@@ -2,10 +2,10 @@ import { Body, Polygon, Vec2, World } from 'planck'
 import Physiology, { radius } from './physiology'
 import { IEnvironment, StepEvent, Steppable } from '../../@types'
 import Controller from '../controller'
-import { FPS, regularPolygonVertices, rotate, vectorAngle } from '../../planck/boxUtil'
+import { FPS, regularPolygonVertices } from '../../planck/boxUtil'
 import Transition from '../../transition'
 import Rectangle from '../../planck/rectangle'
-import { drawOffscreenDirection, PathIntegrator } from '../challengeUtil'
+import { drawOffscreenDirection } from '../challengeUtil'
 
 export default class Environment implements IEnvironment {
   steppables: Steppable[] = []
@@ -18,7 +18,7 @@ export default class Environment implements IEnvironment {
     this.agent = new Physiology(world, controller, targetLocation)
 
     this.target = world.createDynamicBody({
-      linearDamping: 3,
+      linearDamping: 5,
       angularDamping: 1,
       position: targetLocation,
     })
