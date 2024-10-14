@@ -4,7 +4,7 @@ const step = (evt, sensors, actuators) => {
   evt.debugProps.Contact = sensors.contactAngle || ''
   evt.debugProps.TargetDistance = sensors.targetDistance
   evt.debugProps.TargetAngleDiff = sensors.targetAngleDiff
-  evt.debugProps.GoaklDistance = sensors.goalDistance
+  evt.debugProps.GoalDistance = sensors.goalDistance
   evt.debugProps.GoalAngleDiff = sensors.goalAngleDiff
 }
 
