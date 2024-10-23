@@ -195,7 +195,7 @@ const initButtons = () => {
     infoModal.showChallenge(challenge),
   )
   createElement(help, DiscordButton).addEventListener('click', () =>
-    window.open('https://discord.gg/8mhyutmB', '_blank'),
+    window.open('https://discord.gg/nbKw5rZyXt', '_blank'),
   )
 
   createElement(getRequiredElementById('retryChallengeIcon'), BackwardButton)
