@@ -2,6 +2,8 @@
 
 const step = (evt, sensors, actuators) => {}
 
+// HINT: Use Ctrl+/ or ⌘/ to uncomment lines or selection blocks.
+
 // const setup = () => {
 //   return {
 //     keyHandlers: [

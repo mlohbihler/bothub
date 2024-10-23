@@ -1,5 +1,7 @@
 // See the info (i) dialog for details about this challenge.
 
+// Join the discord server for hints and solutiuons.
+
 const step = (evt, sensors, actuators) => {
   evt.debugProps.Contact = sensors.contactAngle || ''
   evt.debugProps.TargetDistance = sensors.targetDistance
