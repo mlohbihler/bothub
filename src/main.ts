@@ -98,7 +98,9 @@ window.onload = () => {
   setChallenge(challenges.find(c => c.getName() === challengeName))
 
   if (isTouchDevice()) {
-    alert(`This app works best on laptops/desktops. Touch screens aren't yet supported. Sorry for the hassle.`)
+    alert(
+      `This app works best on laptops/desktops. On mobile the screens are often too small and key events don't work. Sorry for the hassle.`,
+    )
   }
 }
 
@@ -251,6 +253,14 @@ const resetChallenge = (recenter = true) => {
 }
 
 const mouseListeners = (canvas: HTMLCanvasElement) => {
+  const drag = (dx: number, dy: number) => {
+    renderer.moveOffset(dx, dy)
+    if (!runner.running()) {
+      // Too much flashing going on when the running is also refreshing
+      runner.render()
+    }
+  }
+
   canvas.addEventListener('mousemove', evt => {
     const canvasCoords = renderer.offsetToCanvas(evt.offsetX, evt.offsetY)
     getRequiredElementById('canvasMousePosition').textContent = `${Math.round(canvasCoords.x)}, ${Math.round(
@@ -261,11 +271,7 @@ const mouseListeners = (canvas: HTMLCanvasElement) => {
       2,
     )}`
     if (evt.buttons === 1) {
-      renderer.moveOffset(evt.movementX, evt.movementY)
-      if (!runner.running()) {
-        // Too much flashing going on when the running is also refreshing
-        runner.render()
-      }
+      drag(evt.movementX, evt.movementY)
     }
   })
 
@@ -283,6 +289,29 @@ const mouseListeners = (canvas: HTMLCanvasElement) => {
   })
 
   canvas.addEventListener('dblclick', () => renderer.recenter())
+
+  //
+  // Touch
+  let lastTouch: Touch | undefined
+
+  canvas.addEventListener('touchstart', evt => {
+    if (evt.touches.length === 1) {
+      lastTouch = evt.touches[0]
+    }
+  })
+  canvas.addEventListener('touchmove', evt => {
+    if (evt.touches.length === 1 && lastTouch) {
+      const dx = evt.touches[0].clientX - lastTouch.clientX
+      const dy = evt.touches[0].clientY - lastTouch.clientY
+      drag(dx, dy)
+      lastTouch = evt.touches[0]
+    }
+  })
+  canvas.addEventListener('touchend', evt => {
+    if (evt.touches.length === 0) {
+      lastTouch = undefined
+    }
+  })
 }
 
 const keyboardListeners = (canvas: HTMLElement) => {
